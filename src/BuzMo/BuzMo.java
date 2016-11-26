@@ -40,5 +40,7 @@ public class BuzMo {
             e.printStackTrace();
             exit(2);
         }
+
+        log.dispose();
     }
 }

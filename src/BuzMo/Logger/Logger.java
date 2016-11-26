@@ -19,8 +19,8 @@ public class Logger{
     public Logger() throws Exception {
         //Try to create FileHandlers for both debug and general logging
         try{
-            log = new FileHandler("log_"+currentDay, true);
-            debug = new FileHandler("debug_"+currentDay, true);
+            log = new FileHandler(currentDay+".log", true);
+            debug = new FileHandler(currentDay+".debug", true);
         }
         catch(IOException io){
             throw new LoggerException("IOError Initializing Logger", io);
@@ -28,6 +28,12 @@ public class Logger{
         catch(Exception e){
             throw new LoggerException("Error Initializing Logger", e);
         }
+    }
+
+    //dispose must be called when BuzMo is closing to prevent lock files
+    public void dispose(){
+        log.close();
+        debug.close();
     }
 
 
