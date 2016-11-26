@@ -4,14 +4,16 @@ import BuzMo.Database.Database;
 import BuzMo.GUI.GUI;
 import BuzMo.Logger.Logger;
 
+import static java.lang.System.exit;
+
 /**
  * Created by Lucas Lopilato on 11/25/2016.
  * Main class to initialize all component parts for BuzMo
  */
 public class BuzMo {
-    private Logger log = new Logger();
-    private Database db = new Database(log);
-    private GUI gui = new GUI(log);
+    private Logger log;
+    private Database db;
+    private GUI gui;
 
 
     public static void main(String args[]){
@@ -22,10 +24,21 @@ public class BuzMo {
     //Loads Logger
     private BuzMo()
     {
-        //Load Logger
+        try {
+            //Load Logger
+            log = new Logger();
 
-        //Load JDBC
+            //Load Database Connector
+            db = new Database(log);
 
-        //Load GUI
+            //Load GUI
+            gui = new GUI(log);
+
+        }
+        catch(Exception e){
+            System.out.println("Error "+e.getMessage()+" occurred when loading BuzMo");
+            e.printStackTrace();
+            exit(2);
+        }
     }
 }
