@@ -46,6 +46,7 @@ public class AppProperties {
         }
         //Otherwise return the response
         else {
+            log.Log("Read in Database username");
             return response;
         }
     }
@@ -60,6 +61,7 @@ public class AppProperties {
         }
         //Otherwise return the response
         else {
+            log.Log("Read in Database password");
             return response;
         }
     }
