@@ -4,6 +4,7 @@ import BuzMo.Database.Database;
 import BuzMo.GUI.GUI;
 import BuzMo.Logger.Logger;
 import BuzMo.Logger.LoggerException;
+import BuzMo.Properties.AppProperties;
 
 import javax.security.auth.login.LoginException;
 
@@ -37,6 +38,12 @@ public class BuzMo {
 
             //Load GUI
             gui = new GUI(log);
+
+            AppProperties app = new AppProperties(log);
+
+            System.out.println(app.getUsername());
+
+
 
             log.Log("BuzMo Successfully Exited");
         }

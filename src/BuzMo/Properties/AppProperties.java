@@ -14,18 +14,22 @@ public class AppProperties {
     private Properties prop = new Properties();
     private Logger log;
 
-    AppProperties(Logger log) throws PropertiesException{
+    public AppProperties(Logger log) throws PropertiesException{
         //Hook up Properties to log
         this.log = log;
 
         //Read in the config.properties file
         try{
-            InputStream in = getClass().getResourceAsStream("Resources/config.properties");
+            InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.properties");
+            if(in == null){
+                throw new PropertiesException("config.properties could not be located");
+            }
 
             //Read in the properties stream
             prop.load(in);
             log.Log("Read in Properties File");
 
+            //Close the input stream
             in.close();
             log.Log("Successfully Initialized AppProperties");
         }
@@ -36,7 +40,7 @@ public class AppProperties {
     }
 
 
-    String getUsername() throws PropertiesException{
+    public String getUsername() throws PropertiesException{
         //Look up the Username Property
         String response = prop.getProperty("db_u", "");
 
@@ -51,7 +55,7 @@ public class AppProperties {
         }
     }
 
-    String getPassword() throws PropertiesException {
+    public String getPassword() throws PropertiesException {
         //Look up the password Property
         String response = prop.getProperty("db_p", "");
 
