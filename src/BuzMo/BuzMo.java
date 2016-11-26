@@ -39,11 +39,6 @@ public class BuzMo {
             //Load GUI
             gui = new GUI(log);
 
-            AppProperties app = new AppProperties(log);
-
-            System.out.println(app.getUsername());
-
-
 
             log.Log("BuzMo Successfully Exited");
         }
