@@ -5,7 +5,7 @@ package BuzMo.Logger;
  * Custom Exception for all errors that could occur in the Logger
  * Package Private to BuzMo.Logger
  */
-class LoggerException extends Exception {
+public class LoggerException extends Exception {
     LoggerException() { super(); }
     LoggerException(String message) { super(message); }
     LoggerException(String message, Throwable e) { super(message, e); }
