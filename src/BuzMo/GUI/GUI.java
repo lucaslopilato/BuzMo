@@ -12,5 +12,8 @@ public class GUI {
     public GUI(Logger log){
         //Hook up Logger to GUI
         this.log = log;
+
+
+        log.Log("GUI Properly Loaded");
     }
 }

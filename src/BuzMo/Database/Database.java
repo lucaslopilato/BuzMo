@@ -13,5 +13,9 @@ public class Database {
     public Database(Logger log){
         //Hook up the log to the JDBC Class
         this.log = log;
+
+
+
+        log.Log("Database properly loaded");
     }
 }
