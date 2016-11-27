@@ -46,6 +46,7 @@ public class Logger{
 
     //dispose must be called when BuzMo is closing to prevent lock files
     public void dispose(){
+        Log("\n\n");
         log.close();
         debug.close();
     }
