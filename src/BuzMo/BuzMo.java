@@ -41,6 +41,7 @@ public class BuzMo {
 
 
             log.Log("BuzMo Successfully Exited");
+            log.Log("===========================");
         }
         catch(LoggerException le){
             System.out.println("Error "+le.getMessage()+" occurred when loading BuzMo");

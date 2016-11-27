@@ -1,6 +1,9 @@
 package BuzMo.GUI;
 
 import BuzMo.Logger.Logger;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * Created by Lucas Lopilato on 11/25/2016.
@@ -9,10 +12,11 @@ import BuzMo.Logger.Logger;
 public class GUI {
     private Logger log;
 
-    public GUI(Logger log){
-        //Hook up Logger to GUI
+    public GUI(Logger log) {
+        // Hook up Logger to GUI
         this.log = log;
 
+        LoginWindow loginWindow = new LoginWindow(log);
 
         log.Log("GUI Properly Loaded");
     }
