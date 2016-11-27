@@ -4,6 +4,7 @@ import BuzMo.Logger.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 /**
  * Created by Ben on 11/26/2016.
@@ -11,30 +12,103 @@ import java.awt.event.*;
  */
 public class MainMenu extends JFrame {
     private Logger log;
-    private JLabel sampleText = new JLabel("Welcome to the Main Menu!");
-    private JPanel mainPanel = new JPanel();
+    private JFrame mainMenu = new JFrame("Main Menu");
+    private JButton existingConvosButton =  new JButton("Existing MyCircle Conversations");
+    private JButton createNewConvoButton =  new JButton("Create new MyCircle Convo");
+    private JButton myCircleButton =  new JButton("Go to MyCircle");
+    private JButton chatGroupsButton =  new JButton("Go to ChatGroups");
+    private JButton createChatGroupsButton =  new JButton("Create a ChatGroup");
+    private JButton browseMessagesButton =  new JButton("Browse messages");
+    private JButton managerModeButton =  new JButton("Open manager mode");
+    private JButton debugModeButton =  new JButton("Debug mode");
 
     MainMenu(Logger log) {
         // Set the main menu panel parameters
-        super("Main Menu");
-        setSize(300,200);
-        setLocation(500,280);
-        mainPanel.setLayout (null);
+        mainMenu.setResizable(false);
+        mainMenu.setSize(700,500);
+        mainMenu.setLocation(350,280);
+        mainMenu.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Hook up logger to GUI
         this.log = log;
 
-        // Set the field + button parameters
-        sampleText.setBounds(70,50,180,60);
+        final JPanel gridComponents = new JPanel();
+        gridComponents.setLayout(new GridLayout(0,3));
 
-        // Add the fields + buttons to the main menu panel
-        mainPanel.add(sampleText);
+        //Set up components preferred size
+        JButton b = new JButton("Just fake button");
+        Dimension buttonSize = b.getPreferredSize();
+        gridComponents.setPreferredSize(new Dimension((int)(buttonSize.getWidth() * 5)+20,
+                (int)(buttonSize.getHeight() * 7)+20 * 2));
 
-        // Add the main menu panel + ActionListeners to the Content Pane
-        getContentPane().add(mainPanel);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
+        //Add buttons to Grid Layout
+        gridComponents.add(existingConvosButton);
+        gridComponents.add(createNewConvoButton);
+        gridComponents.add(myCircleButton);
+        gridComponents.add(chatGroupsButton);
+        gridComponents.add(createChatGroupsButton);
+        gridComponents.add(browseMessagesButton);
+        gridComponents.add(managerModeButton);
+        gridComponents.add(debugModeButton);
+
+        mainMenu.add(gridComponents);
+
+        //Display the window.
+        mainMenu.pack();
+        mainMenu.setVisible(true);
+        handleButtonAction();
 
         log.Log("GUI -- MainMenu properly loaded");
+    }
+
+    private void handleButtonAction() {
+        existingConvosButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
+        createNewConvoButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
+        myCircleButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
+        chatGroupsButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
+        createChatGroupsButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
+        browseMessagesButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
+        managerModeButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
+        debugModeButton.addActionListener(
+                (ActionEvent e) -> {
+                    mainMenu.dispose();
+                    dispose();
+                }
+        );
     }
 }

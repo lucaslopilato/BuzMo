@@ -10,14 +10,8 @@ import java.awt.event.*;
  * Initializes the GUI for BuzMo Handles all graphical requests for both Manager and User
  */
 public class GUI {
-    private Logger log;
-
     public GUI(Logger log) {
-        // Hook up Logger to GUI
-        this.log = log;
-
-        LoginWindow loginWindow = new LoginWindow(log);
-
+        new LoginWindow(log);
         log.Log("GUI Properly Loaded");
     }
 }
