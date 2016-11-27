@@ -1,6 +1,7 @@
 package BuzMo;
 
 import BuzMo.Database.Database;
+import BuzMo.Database.DatabaseException;
 import BuzMo.GUI.GUI;
 import BuzMo.Logger.Logger;
 import BuzMo.Logger.LoggerException;
@@ -39,18 +40,25 @@ public class BuzMo {
             //Load GUI
             gui = new GUI(log);
 
-
+            db.dispose();
             log.Log("BuzMo Successfully Exited");
             log.Log("===========================");
         }
         catch(LoggerException le){
-            System.out.println("Error "+le.getMessage()+" occurred when loading BuzMo");
+            System.out.println("Error: "+le.getMessage()+" occurred when initializing the logger");
             le.printStackTrace();
             exit(2);
         }
+        catch(DatabaseException de){
+            System.out.println("Error: "+de.getMessage()+" occurred when initializing the database");
+            log.Log("Error: "+de.getMessage()+" occurred when initializing the database");
+            de.printStackTrace();
+            log.dispose();
+            exit(2);
+        }
         catch(Exception e){
-            log.Log("Error "+e.getMessage()+" occurred when loading BuzMo");
-            System.out.println("Error "+e.getMessage()+" occurred when loading BuzMo");
+            log.Log("Error: "+e.getMessage()+" occurred when loading BuzMo");
+            System.out.println("Error: "+e.getMessage()+" occurred when loading BuzMo");
             e.printStackTrace();
             log.dispose();
             exit(2);
