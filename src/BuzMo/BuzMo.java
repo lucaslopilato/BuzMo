@@ -38,7 +38,7 @@ public class BuzMo {
             db = new Database(log);
 
             //Load GUI
-            gui = new GUI(log);
+            //gui = new GUI(log);
 
             db.dispose();
             log.Log("BuzMo Successfully Exited");

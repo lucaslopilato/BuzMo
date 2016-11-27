@@ -29,6 +29,7 @@ class CreateDatabase {
          //Import schema based on BuzMo Schematic
          writeAllTables();
 
+         inputInfo();
 
         log.Log("Wrote BuzMo Schema to Connected Database");
     }
@@ -41,7 +42,7 @@ class CreateDatabase {
                 "email_address VARCHAR(20)," +
                 "password VARCHAR(10)," +
                 "screenname VARCHAR(20)," +
-                "isManager BOOLEAN," +
+                "isManager BOOLEAN NOT NULL DEFAULT 0," +
                 "PRIMARY KEY(email_address))";
 
         writeTable("Users", users);
@@ -134,14 +135,15 @@ class CreateDatabase {
     //Are not present, fail silently
     private void dropAllTables(){
         Vector<String> tables = new Vector<>();
-        tables.add("users");
         tables.add("circleoffriends");
         tables.add("usertopicwords");
-        tables.add("messages");
         tables.add("messagetopicwords");
         tables.add("messagereceivers");
-        tables.add("chatgroups");
         tables.add("chatgroupmembers");
+        tables.add("chatgroups");
+        tables.add("messages");
+        tables.add("users");
+
 
         //Try to drop each table and fail silently if not found
         for(String s : tables) {
@@ -162,6 +164,20 @@ class CreateDatabase {
             log.Log("Error dropping table: "+ sql.getMessage());
         }
     }
+
+    //Input Given info to all tables
+    private void inputInfo() throws DatabaseException
+    {
+        InsertUsers();
+    }
+
+    //Input Users into Users table
+    private void InsertUsers() throws DatabaseException{
+        CSVLoader csv = new CSVLoader(log, connection);
+        csv.loadCSV("users.csv", "Users");
+
+    }
+
 
 
 
