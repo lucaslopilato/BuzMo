@@ -40,7 +40,7 @@ public class BuzMo {
             //Load GUI
             gui = new GUI(log);
 
-
+            db.dispose();
             log.Log("BuzMo Successfully Exited");
         }
         catch(LoggerException le){
