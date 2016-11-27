@@ -51,8 +51,7 @@ public class LoginWindow extends JFrame {
         log.Log("GUI -- LoginWindow properly loaded");
     }
 
-    public void handleLoginAction() {
-        // Lambda function
+    private void handleLoginAction() {
         loginButton.addActionListener(
                 (ActionEvent e) -> {
                     String usernameInput = usernameField.getText();
