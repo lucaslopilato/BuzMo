@@ -79,10 +79,18 @@ public class Database {
         }
         log.Log("Database properly loaded");
 
+        CreateDatabase init = new CreateDatabase(log,connection);
 
-        CreateAllTables();
     }
 
+    //Closes all connections
+    public void dispose() throws DatabaseException{
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error attempting to close SQL connection");
+        }
+    }
     //Deletes all tables, recreates the whole schema, and imports all info
     private void ResetDatabase() {
 
@@ -92,26 +100,4 @@ public class Database {
 
     }
 
-    //Inserts all tables based on BuzMo Database Design
-    private void CreateAllTables() throws DatabaseException {
-        String users = "CREATE TABLE Users( " +
-                "name VARCHAR(20)," +
-                "phone_number CHAR(10)," +
-                "email_address VARCHAR(20)," +
-                "password VARCHAR(10)," +
-                "screenname VARCHAR(20)," +
-                "isManager BOOLEAN," +
-                "PRIMARY KEY(email_address))";
-
-    try
-    {
-         Statement st = connection.createStatement();
-        st.execute(users);
-
-    }
-    catch(SQLException sql)
-    {
-        throw new DatabaseException("Error Creating All New Tables", sql);
-    }
-}
 }
