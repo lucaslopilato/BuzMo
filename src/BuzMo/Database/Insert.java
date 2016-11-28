@@ -8,6 +8,7 @@ public enum Insert {
     OBJ_EXISTS ("Object Already Exists"),
     USR_NOEXIST ("User Doesn't exist"),
     SUCCESS ("Successfully Entered"),
+    EMPTY_TOPIC_WORDS("Empty Topic Words when Message Public"),
     INVALID ("Invalid Arguments");
 
     private final String message;
