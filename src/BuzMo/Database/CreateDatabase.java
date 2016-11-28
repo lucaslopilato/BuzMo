@@ -5,9 +5,6 @@ import BuzMo.Logger.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.StringJoiner;
 import java.util.Vector;
 
 /**
@@ -283,7 +280,7 @@ class CreateDatabase {
 
     private void InsertMessages() throws DatabaseException{
         CSVLoader csv = new CSVLoader(log);
-        csv.loadCSV("messages.csv");
+        csv.loadCSV("privateMessages.csv");
         String[] line;
 
         String sql = "";
