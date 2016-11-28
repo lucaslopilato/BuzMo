@@ -9,6 +9,7 @@ import oracle.jdbc.pool.OracleDataSource;
 import javax.sql.DataSource;
 import java.io.Console;
 import java.sql.*;
+import java.util.Vector;
 
 
 /**
@@ -22,6 +23,7 @@ public class Database {
     private Logger log;
     private Connection connection;
     private AppProperties properties;
+    private int newMsg = 0;
 
     //private OracleDataSource source;
     private MysqlDataSource source;
@@ -91,13 +93,176 @@ public class Database {
             throw new DatabaseException("Error attempting to close SQL connection");
         }
     }
-    //Deletes all tables, recreates the whole schema, and imports all info
-    private void ResetDatabase() {
+
+
+
+    //Adds new private message
+    public Insert addMessage(int id, String sender, String message, String timestamp, Vector<String> recipients, boolean isPublic, Vector<String> topicWords){
+        String sql = "INSERT INTO Messages(message_id, sender, message, timestamp, is_public) VALUES (";
+        try{
+            if(!userExists(sender)){
+                return Insert.USR_NOEXIST;
+            }
+
+            if(msgExists(id)){
+                return Insert.OBJ_EXISTS;
+            }
+
+            sql += id + "," + addTicks(sender) + "," + addTicks(message) + "," + addTicks(timestamp) + "," + isPublic+")";
+
+            Statement st = connection.createStatement();
+            st.execute(sql);
+            log.Log("wrote: "+ sql);
+
+            //Add all recipients
+            for(String s: recipients){
+                if(!userExists(s)){
+                    return Insert.USR_NOEXIST;
+                }
+
+                sql = "INSERT INTO messageReceivers (message_id, recipient) VALUES (" + id +","+addTicks(s) + ")";
+                st.execute(sql);
+                log.Log("wrote: "+sql);
+            }
+
+            //Add all
+            if(isPublic && topicWords.isEmpty()) {
+                return Insert.EMPTY_TOPIC_WORDS;
+            }
+
+            for(String s: topicWords){
+                sql = "INSERT INTO MessageTopicWords (message_id, word) VALUES (" + id +","+addTicks(s)+")";
+                st.execute(sql);
+                log.Log("wrote: "+sql);
+            }
+
+
+        }catch (Exception e){
+            log.Log("Invalid sql: "+ sql);
+        }
+
+        return Insert.SUCCESS;
+    }
+
+
+    //Adds new Chat Group to the Database
+    public Insert addChatGroups(String owner, String name, int duration, Vector<String> members){
+        String sql = "";
+        try {
+            //Create new statement
+            Statement st = connection.createStatement();
+            ResultSet res;
+
+            if(chatGroupExists(name)){
+                return Insert.OBJ_EXISTS;
+            }
+
+            if(!userExists(owner)){
+                return Insert.USR_NOEXIST;
+            }
+
+
+            //Insert ChatGroup into the database
+            sql = "INSERT INTO ChatGroups (owner, name, duration) VALUES " +
+                    "(" + addTicks(owner) +","+ addTicks(name) +","+ duration +")";
+            st.execute(sql);
+            log.Log("Chatgroup "+name+" inserted ");
+
+            //Associate new users with chatgroup
+            for(String s: members){
+                if(!userExists(s)){
+                    log.Log("user "+s+" could not be added to the chatgroup "+name+" because they do not exist");
+                    return Insert.USR_NOEXIST;
+                }
+
+                sql = "INSERT INTO ChatGroupMembers(group_name, member) VALUES (" + addTicks(name) +"," + addTicks(s) +")";
+                st.execute(sql);
+            }
+
+        }catch(Exception e){
+            log.Log("Invalid SQL: "+sql);
+            return Insert.INVALID;
+        }
+
+        return Insert.SUCCESS;
+    }
+
+    //Surrounds a string with ticks
+    private String addTicks(String original){
+        if(original.charAt(0) == '\'')
+            return original;
+        return "'"+original+"'";
+    }
+
+    //Checks if a user exists by email
+    private boolean userExists(String user) throws DatabaseException{
+        String sql;
+        try {
+            Statement st = connection.createStatement();
+            sql = "SELECT COUNT(1) FROM Users WHERE email_address = " + addTicks(user);
+            st.execute(sql);
+
+            ResultSet res = st.getResultSet();
+            res.first();
+            if (res.getInt(1)!= 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+
+
+        } catch (Exception e) {
+            throw new DatabaseException(e);
+        }
 
     }
 
-    private void DeleteAllTables() {
+    //Returns true if a chat group exists
+    public boolean chatGroupExists(String group) throws DatabaseException {
+        String sql;
+        try {
+            Statement st = connection.createStatement();
+            sql = "SELECT COUNT(1) FROM ChatGroups C WHERE name = " + addTicks(group);
+            st.execute(sql);
+
+            ResultSet res = st.getResultSet();
+            res.first();
+            if (res.getInt(1) != 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+
+
+        } catch (Exception e) {
+            throw new DatabaseException(e);
+        }
 
     }
 
+    //Returns true if a chat group exists
+    public boolean msgExists(int id) throws DatabaseException {
+        String sql;
+        try {
+            Statement st = connection.createStatement();
+            sql = "SELECT COUNT(1) FROM Messages M WHERE message_id = " + id;
+            st.execute(sql);
+
+            ResultSet res = st.getResultSet();
+            res.first();
+            if (res.getInt(1) != 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+
+
+        } catch (Exception e) {
+            throw new DatabaseException(e);
+        }
+
+    }
 }

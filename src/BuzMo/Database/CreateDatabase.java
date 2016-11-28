@@ -53,6 +53,8 @@ class CreateDatabase {
                 "FOREIGN KEY(user) REFERENCES Users(email_address)," +
                 "FOREIGN KEY(friend) REFERENCES users(email_address)," +
                 "PRIMARY KEY (user,friend))";
+        //Check user != friend
+        //Check user, friend != friend user
 
         writeTable("CircleOfFriends", CircleOfFriends);
 
@@ -68,9 +70,12 @@ class CreateDatabase {
 
         String Messages = "CREATE TABLE Messages(" +
                 "message_id INTEGER," +
-                "timestamp VARCHAR(20)," +
                 "sender VARCHAR(20)," +
+                "message VARCHAR(1400)," +
+                "timestamp VARCHAR(20)," +
+                "is_public BOOLEAN," +
                 "PRIMARY KEY(message_id))";
+                //Check if message is public, topic words cannot be null
 
         writeTable("Messages", Messages);
 
@@ -79,6 +84,8 @@ class CreateDatabase {
                 "word VARCHAR(20)," +
                 "FOREIGN KEY(message_id) REFERENCES Messages(message_id)," +
                 "PRIMARY KEY(message_id, word))";
+        //Check if message is public, topic words cannot be null
+
 
         writeTable("MessageTopicWords", MessageTopicWords);
 
@@ -169,14 +176,133 @@ class CreateDatabase {
     private void inputInfo() throws DatabaseException
     {
         InsertUsers();
+        InsertFriends();
+        InsertIndividualFriends();
+
+        //InsertMessages();
     }
 
     //Input Users into Users table
     private void InsertUsers() throws DatabaseException{
-        CSVLoader csv = new CSVLoader(log, connection);
-        csv.loadCSV("users.csv", "Users");
+        CSVLoader csv = new CSVLoader(log);
+
+        csv.loadCSV("users.csv");
+
+        //Get Headers
+        String[] fields = csv.getNextLine();
+        int numFields = fields.length;
+
+        //Read each line
+        String[] data;
+
+        try {
+            while ((data = csv.getNextLine()) != null) {
+                //Format Base SQL for table insert
+                String sql = "INSERT INTO " + "users" + " (";
+                for (int i = 0; i < numFields; i++) {
+                    sql += fields[i];
+                    if (i != numFields - 1)
+                        sql += ',';
+                }
+
+                sql += " ) VALUES ( ";
+
+                for (int i = 0; i < numFields; i++) {
+                    sql += "'" + data[i] + "'";
+                    if (i != numFields - 1)
+                        sql += ',';
+                }
+
+                sql += ")";
+
+                log.Log("attempting to write " + sql);
+
+                Statement st = connection.createStatement();
+                st.execute(sql);
+
+                log.Log("line successfully inserted into users");
+            }
+        }
+        catch(Exception e){
+            throw new DatabaseException(e);
+        }
+    }
+
+    private void InsertFriends() throws DatabaseException{
+        CSVLoader csv = new CSVLoader(log);
+        csv.loadCSV("circleOfFriends.csv");
+
+        String[] data;
+        try {
+            //Operate on each line individually
+            while ((data = csv.getNextLine()) != null) {
+
+                //For each name, add the whole circle of friends excluding the same user
+                for (int i = 0; i < data.length; i++) {
+                    //Insert the User
+                    for (int j = i+1; j < data.length; j++) {
+                        if (j != i) {
+                            String sql = "INSERT INTO circleoffriends ( user, friend ) VALUES (";
+                            sql += ("'" + data[i] + "'");
+                            sql += ",";
+                            sql += ("'" + data[j] + "')");
+
+                            Statement st = connection.createStatement();
+                            st.execute(sql);
+                        }
+                    }
+                }
+
+            }
+        } catch(Exception e){
+            throw new DatabaseException(e);
+        }
 
     }
+
+    private void InsertIndividualFriends() throws DatabaseException{
+        CSVLoader csv = new CSVLoader(log);
+        csv.loadCSV("ifriends.csv");
+        String[] line;
+
+        try {
+            while ((line = csv.getNextLine()) != null) {
+                String sql = "INSERT INTO circleoffriends ( user, friend ) VALUES (";
+                sql += ("'" + line[0] + "','" + line[1] + "')");
+
+                Statement st = connection.createStatement();
+                st.execute(sql);
+                log.Log("successfully executed individual friend q: "+sql);
+            }
+        } catch(SQLException s){
+            throw new DatabaseException(s);
+        }
+    }
+
+    /*private void InsertMessages() throws DatabaseException{
+        CSVLoader csv = new CSVLoader(log);
+        csv.loadCSV("privateMessages.csv");
+        String[] line;
+
+        String sql = "";
+        try {
+            while ((line = csv.getNextLine()) != null) {
+                sql = "INSERT INTO messages ( message_id, sender, message, timestamp, is_public ) VALUES (";
+                sql += line[0] + ",";
+                for(int i=1; i<line.length; i++){
+                    sql += ("'" + line[i].replace('|',',') + "',");
+                }
+                sql += "0)";
+
+                Statement st = connection.createStatement();
+                st.execute(sql);
+                log.Log("successfully executed individual friend q: "+sql);
+            }
+        } catch(SQLException s){
+            log.Log("sql error trying to write message "+sql);
+            throw new DatabaseException(s);
+        }
+    }*/
 
 
 
