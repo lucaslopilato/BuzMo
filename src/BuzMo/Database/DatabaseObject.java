@@ -11,8 +11,8 @@ import java.sql.Statement;
  */
 public class DatabaseObject {
     //Connection to the database via the driver
-    protected Logger log;
-    protected Statement st;
+    Logger log;
+    Statement st;
 
     //Initializes a new DatabaseObject
     public DatabaseObject(Logger log, Connection connection) throws DatabaseException{
@@ -29,6 +29,13 @@ public class DatabaseObject {
         }catch(Exception e){
             throw new DatabaseException("Error initializing SQL Statement for new DatabaseObject");
         }
+    }
+
+    //Surrounds a string with ticks
+    static String addTicks(String original){
+        if(original.charAt(0) == '\'')
+            return original;
+        return "'"+original+"'";
     }
 
 }
