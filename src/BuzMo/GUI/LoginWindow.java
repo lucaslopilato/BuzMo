@@ -2,7 +2,6 @@ package BuzMo.GUI;
 
 import BuzMo.Logger.Logger;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -31,7 +30,7 @@ public class LoginWindow extends JFrame {
         loginWindow.setResizable(false);
 
         // Create the main panel
-        JPanel mainPanel = new JPanel(new BorderLayout(5,5));
+        JPanel mainPanel = new JPanel();
         mainPanel.setLayout(null);
 
         // Create labels
@@ -55,6 +54,7 @@ public class LoginWindow extends JFrame {
         // Add the login panel + ActionListeners to the Content Pane
         loginWindow.setContentPane(mainPanel);
         loginWindow.setVisible(true);
+
         handleLoginAction();
 
         log.Log("GUI -- LoginWindow properly loaded");
@@ -66,17 +66,15 @@ public class LoginWindow extends JFrame {
                     String usernameInput = usernameField.getText();
                     String passwordInput = new String(passwordField.getPassword());
 
-                    // HANDLE LOGIN STUFF BELOW! Do a SQL query for email and password in Users table.
+                    // ADD SQL QUERY to look up email and password in Users table.
                     // If login successful, bring up a new Main Menu and dispose of the current window
                     if (usernameInput.equals("test") && passwordInput.equals("test")) {
-                        System.out.println("Successful login attempt [username: "+usernameInput+", password: "+passwordInput+"]");
-                        new MainMenu(log);
+                        new MainMenu(log, usernameInput);
                         loginWindow.dispose();
                         dispose();
                     }
                     // If username or password are incorrect, ask for it again
                     else {
-                        System.out.println("Failed login attempt [username: "+usernameInput+", password: "+passwordInput+"]");
                         JOptionPane.showMessageDialog(null, "Invalid Password / Username");
                         usernameField.setText("");
                         passwordField.setText("");

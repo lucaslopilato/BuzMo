@@ -1,9 +1,6 @@
 package BuzMo.GUI;
 
 import BuzMo.Logger.Logger;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
 /**
  * Created by Lucas Lopilato on 11/25/2016.
