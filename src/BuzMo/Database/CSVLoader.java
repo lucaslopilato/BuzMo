@@ -3,9 +3,6 @@ package BuzMo.Database;
 import BuzMo.Logger.Logger;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Created by Lucas Lopilato on 11/26/2016.
@@ -13,15 +10,73 @@ import java.sql.Statement;
  */
 class CSVLoader {
     private Logger log;
-    private Connection connection;
     private char separator = ',';
+    private BufferedReader br = null;
+    private InputStream in = null;
+    private InputStreamReader inr = null;
+    private String delimiter = ",";
 
-    CSVLoader(Logger log, Connection connection){
-        this.connection = connection;
+    CSVLoader(Logger log){
         this.log = log;
     }
 
-    void loadCSV(String csvFile, String tableName) throws DatabaseException
+    //Loads a new csvFile csvFile and saves a reference to it
+    void loadCSV(String csvFile){
+        //Initialize all classes needed to read csv
+        try{
+            this.br.close();
+            this.in.close();
+            this.inr.close();
+        }
+        catch(Exception e){
+            log.Log("br, in, or inr tried to be closed when already closed");
+        }
+
+        this.br = null;
+        this.in = null;
+        this.inr = null;
+        String line;
+
+        this.in = this.getClass().getClassLoader().getResourceAsStream(csvFile);
+        this.inr = new InputStreamReader(in);
+        this.br = new BufferedReader(inr);
+
+        log.Log("file "+csvFile+"read in");
+    }
+
+
+    String[] getNextLine() throws DatabaseException{
+        if(br == null){
+            throw new DatabaseException("No CSV File to read");
+        }
+
+        //Try to read a line and return it
+        try{
+            String line = br.readLine();
+
+            //If the line is empty close up all resources for the file.
+            if(line == null) {
+                log.Log("line empty, closing out readers");
+                this.in.close();
+                this.inr.close();
+                this.br.close();
+                this.in = null;
+                this.inr = null;
+                this.br = null;
+
+                return null;
+            }
+
+
+            log.Log("successfully read a line");
+            return line.split(delimiter);
+        }
+        catch(Exception e){
+            throw new DatabaseException(e);
+        }
+    }
+
+    /*void loadCSV(String csvFile, String tableName) throws DatabaseException
     {
         BufferedReader br = null;
         InputStream in = null;
@@ -84,5 +139,5 @@ class CSVLoader {
                 }
             }
         }
-    }
+    }*/
 }

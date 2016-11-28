@@ -53,6 +53,8 @@ class CreateDatabase {
                 "FOREIGN KEY(user) REFERENCES Users(email_address)," +
                 "FOREIGN KEY(friend) REFERENCES users(email_address)," +
                 "PRIMARY KEY (user,friend))";
+        //Check user != friend
+        //Check user, friend != friend user
 
         writeTable("CircleOfFriends", CircleOfFriends);
 
@@ -173,8 +175,49 @@ class CreateDatabase {
 
     //Input Users into Users table
     private void InsertUsers() throws DatabaseException{
-        CSVLoader csv = new CSVLoader(log, connection);
-        csv.loadCSV("users.csv", "Users");
+        CSVLoader csv = new CSVLoader(log);
+
+        csv.loadCSV("users.csv");
+
+        //Get Headers
+        String[] fields = csv.getNextLine();
+        int numFields = fields.length;
+
+        //Read each line
+        String[] data;
+
+        try {
+            while ((data = csv.getNextLine()) != null) {
+                //Format Base SQL for table insert
+                String sql = "INSERT INTO " + "users" + " (";
+                for (int i = 0; i < numFields; i++) {
+                    sql += fields[i];
+                    if (i != numFields - 1)
+                        sql += ',';
+                }
+
+                sql += " ) VALUES ( ";
+
+                for (int i = 0; i < numFields; i++) {
+                    sql += "'" + data[i] + "'";
+                    if (i != numFields - 1)
+                        sql += ',';
+                }
+
+                sql += ")";
+
+                log.Log("attempting to write " + sql);
+
+                Statement st = connection.createStatement();
+                st.execute(sql);
+
+                log.Log("line successfully inserted into users");
+            }
+        }
+        catch(Exception e){
+            throw new DatabaseException(e);
+        }
+
 
     }
 
