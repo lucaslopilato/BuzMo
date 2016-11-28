@@ -95,12 +95,7 @@ public class User extends DatabaseObject{
 
             ResultSet res = st.getResultSet();
             res.first();
-            if (res.getInt(1) == 0) {
-                return false;
-            }
-            else{
-                return true;
-            }
+            return res.getInt(1) != 0;
 
         } catch (Exception e) {
             throw new DatabaseException(e);
