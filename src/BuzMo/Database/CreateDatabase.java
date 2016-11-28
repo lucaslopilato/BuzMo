@@ -171,8 +171,8 @@ class CreateDatabase {
     private void inputInfo() throws DatabaseException
     {
         InsertUsers();
-
         InsertFriends();
+        InsertIndividualFriends();
     }
 
     //Input Users into Users table
@@ -253,7 +253,24 @@ class CreateDatabase {
 
     }
 
-    
+    private void InsertIndividualFriends() throws DatabaseException{
+        CSVLoader csv = new CSVLoader(log);
+        csv.loadCSV("ifriends.csv");
+        String[] line;
+
+        try {
+            while ((line = csv.getNextLine()) != null) {
+                String sql = "INSERT INTO circleoffriends ( user, friend ) VALUES (";
+                sql += ("'" + line[0] + "','" + line[1] + "')");
+
+                Statement st = connection.createStatement();
+                st.execute(sql);
+                log.Log("successfully executed individual friend q: "+sql);
+            }
+        } catch(SQLException s){
+            throw new DatabaseException(s);
+        }
+    }
 
 
 }
