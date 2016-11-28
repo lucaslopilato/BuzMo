@@ -5,6 +5,9 @@ import BuzMo.Logger.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringJoiner;
 import java.util.Vector;
 
 /**
@@ -70,9 +73,12 @@ class CreateDatabase {
 
         String Messages = "CREATE TABLE Messages(" +
                 "message_id INTEGER," +
-                "timestamp VARCHAR(20)," +
                 "sender VARCHAR(20)," +
+                "message VARCHAR(1400)," +
+                "timestamp VARCHAR(20)," +
+                "is_public BOOLEAN," +
                 "PRIMARY KEY(message_id))";
+                //Check if message is public, topic words cannot be null
 
         writeTable("Messages", Messages);
 
@@ -81,6 +87,8 @@ class CreateDatabase {
                 "word VARCHAR(20)," +
                 "FOREIGN KEY(message_id) REFERENCES Messages(message_id)," +
                 "PRIMARY KEY(message_id, word))";
+        //Check if message is public, topic words cannot be null
+
 
         writeTable("MessageTopicWords", MessageTopicWords);
 
@@ -173,6 +181,7 @@ class CreateDatabase {
         InsertUsers();
         InsertFriends();
         InsertIndividualFriends();
+        InsertMessages();
     }
 
     //Input Users into Users table
@@ -271,6 +280,33 @@ class CreateDatabase {
             throw new DatabaseException(s);
         }
     }
+
+    private void InsertMessages() throws DatabaseException{
+        CSVLoader csv = new CSVLoader(log);
+        csv.loadCSV("messages.csv");
+        String[] line;
+
+        String sql = "";
+        try {
+            while ((line = csv.getNextLine()) != null) {
+                sql = "INSERT INTO messages ( message_id, sender, message, timestamp, is_public ) VALUES (";
+                sql += line[0] + ",";
+                for(int i=1; i<line.length; i++){
+                    sql += ("'" + line[i].replace('|',',') + "',");
+                }
+                sql += "0)";
+
+                Statement st = connection.createStatement();
+                st.execute(sql);
+                log.Log("successfully executed individual friend q: "+sql);
+            }
+        } catch(SQLException s){
+            log.Log("sql error trying to write message "+sql);
+            throw new DatabaseException(s);
+        }
+    }
+
+
 
 
 }
