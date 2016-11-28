@@ -50,18 +50,21 @@ public class CircleOfFriends extends DatabaseObject {
 
 
     //Add new Friendship
-    public void addFriends(String user1, String user2) throws DatabaseException {
+    public Insert addFriends(String user1, String user2) throws DatabaseException {
         //Check if both users are the same
         if(user1.compareTo(user2) == 0){
-            throw new DatabaseException("Users are implicitly friends with each other");
+            return Insert.DUPLICATE;
+            //throw new DatabaseException("Users are implicitly friends with each other");
         }
 
         if(!User.exists(st, user1)){
-            throw new DatabaseException("Cannot add friendship, "+user1+" doesn't exist");
+            return Insert.NOEXIST_USR;
+            //throw new DatabaseException("Cannot add friendship, "+user1+" doesn't exist");
         }
 
         if(!User.exists(st, user2)){
-            throw new DatabaseException("Cannot add friendship, "+user2+" doesn't exist");
+            return Insert.NOEXIST_USR;
+            //throw new DatabaseException("Cannot add friendship, "+user2+" doesn't exist");
         }
 
         String sql = "INSERT INTO circleoffriends (user,friend) VALUES (" +addTicks(user1)+","+addTicks(user2)+")";
@@ -71,5 +74,6 @@ public class CircleOfFriends extends DatabaseObject {
             log.Log("Invalid SQL: "+sql);
             throw new DatabaseException(e);
         }
+        return Insert.SUCCESS;
     }
 }

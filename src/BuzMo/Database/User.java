@@ -1,7 +1,6 @@
 package BuzMo.Database;
 
 import BuzMo.Logger.Logger;
-import javafx.scene.chart.PieChart;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -103,9 +102,10 @@ public class User extends DatabaseObject{
     }
 
     //Insert
-    public static void insert(Statement st, User user, Boolean isManager) throws DatabaseException {
+    public static Insert insert(Statement st, User user, Boolean isManager) throws DatabaseException {
         if(user.exists()){
-            throw new DatabaseException("User already exists");
+            return Insert.DUPLICATE;
+            //throw new DatabaseException("User already exists");
         }
         String sql = "INSERT INTO users (name,phone_number,email_address,password,screenname,isManager) " +
                 "VALUES ("+addTicks(user.name)+","+addTicks(user.phoneNumber)+","+addTicks(user.email)+","+
@@ -122,8 +122,9 @@ public class User extends DatabaseObject{
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-
         user.log.Log("successfully executed "+sql);
+        return Insert.SUCCESS;
+
     }
 
 }

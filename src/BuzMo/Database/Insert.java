@@ -5,8 +5,8 @@ package BuzMo.Database;
  * Enum describing each possible error code for trying to add a new item into the database
  */
 public enum Insert {
-    OBJ_EXISTS ("Object Already Exists"),
-    USR_NOEXIST ("User Doesn't exist"),
+    DUPLICATE ("Object Already Exists"),
+    NOEXIST_USR ("User Doesn't exist"),
     SUCCESS ("Successfully Entered"),
     EMPTY_TOPIC_WORDS("Empty Topic Words when Message Public"),
     INVALID ("Invalid Arguments");
