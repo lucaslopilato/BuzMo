@@ -22,7 +22,7 @@ public class MainMenu extends JFrame {
     private JButton managerModeButton =  new JButton("Open manager mode");
     private JButton debugModeButton =  new JButton("Debug mode");
 
-    MainMenu(Logger log) {
+    MainMenu(Logger log, String yourUsername) {
         // Set the main menu panel parameters
         mainMenu.setResizable(false);
         mainMenu.setSize(700,500);
@@ -56,58 +56,50 @@ public class MainMenu extends JFrame {
         //Display the window.
         mainMenu.pack();
         mainMenu.setVisible(true);
-        handleButtonAction();
+        handleButtonAction(log, yourUsername);
 
         log.Log("GUI -- MainMenu properly loaded");
     }
 
-    private void handleButtonAction() {
+    private void handleButtonAction(Logger log, String yourUser) {
         existingConvosButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+                    new ExistingConvos(log, yourUser);
                 }
         );
         createNewConvoButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+                    new CreateNewConvo(log, yourUser);
                 }
         );
         myCircleButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+
                 }
         );
         chatGroupsButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+
                 }
         );
         createChatGroupsButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+                    new NewChatGroup(log, yourUser);
                 }
         );
         browseMessagesButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+
                 }
         );
         managerModeButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+
                 }
         );
         debugModeButton.addActionListener(
                 (ActionEvent e) -> {
-                    mainMenu.dispose();
-                    dispose();
+
                 }
         );
     }

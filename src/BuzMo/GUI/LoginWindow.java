@@ -70,7 +70,7 @@ public class LoginWindow extends JFrame {
                     // If login successful, bring up a new Main Menu and dispose of the current window
                     if (usernameInput.equals("test") && passwordInput.equals("test")) {
                         System.out.println("Successful login attempt [username: "+usernameInput+", password: "+passwordInput+"]");
-                        new MainMenu(log);
+                        new MainMenu(log, usernameInput);
                         loginWindow.dispose();
                         dispose();
                     }
