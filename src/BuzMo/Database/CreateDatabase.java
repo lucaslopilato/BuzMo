@@ -178,7 +178,8 @@ class CreateDatabase {
         InsertUsers();
         InsertFriends();
         InsertIndividualFriends();
-        InsertMessages();
+
+        //InsertMessages();
     }
 
     //Input Users into Users table
@@ -278,7 +279,7 @@ class CreateDatabase {
         }
     }
 
-    private void InsertMessages() throws DatabaseException{
+    /*private void InsertMessages() throws DatabaseException{
         CSVLoader csv = new CSVLoader(log);
         csv.loadCSV("privateMessages.csv");
         String[] line;
@@ -301,7 +302,7 @@ class CreateDatabase {
             log.Log("sql error trying to write message "+sql);
             throw new DatabaseException(s);
         }
-    }
+    }*/
 
 
 
