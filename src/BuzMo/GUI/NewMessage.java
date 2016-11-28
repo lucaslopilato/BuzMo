@@ -16,7 +16,7 @@ public class NewMessage {
     private JButton sendButton =  new JButton("Send");
     private JTextField messageField = new JTextField();
 
-    public NewMessage(Logger log, String username) {
+    public NewMessage(Logger log, String yourUsername, String friendUsername) {
         // Hook up logger to GUI
         this.log = log;
 
@@ -46,15 +46,18 @@ public class NewMessage {
         // Add the login panel + ActionListeners to the Content Pane
         messageWindow.setContentPane(mainPanel);
         messageWindow.setVisible(true);
-        handleMessageSubmit();
 
-        log.Log("GUI -- LoginWindow properly loaded");
+        handleMessageSubmit(yourUsername, friendUsername);
+
+        log.Log("GUI -- NewMessage properly loaded");
     }
 
-    private void handleMessageSubmit() {
+    // ADD A SQL QUERY! Update the table so that your friend receives a message from you
+    private void handleMessageSubmit(String yourUsername, String friendUsername) {
         sendButton.addActionListener(
                 (ActionEvent e) -> {
-                    // ADD A SQL QUERY UPDATING THE TABLE
+                    String messageContents = messageField.getText();
+                    System.out.println("Message being sent from " + yourUsername + " to " + friendUsername + ": " + messageContents);
                     messageWindow.dispose();
                 }
         );

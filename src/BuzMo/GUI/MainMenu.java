@@ -4,14 +4,15 @@ import BuzMo.Logger.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 
 /**
  * Created by Ben on 11/26/2016.
- * This is created after a successful login. Presents user with many options
+ * This is created after a successful login. The portal for all other options.
  */
 public class MainMenu extends JFrame {
     private Logger log;
+
+    // The main frame + buttons
     private JFrame mainMenu = new JFrame("Main Menu");
     private JButton existingConvosButton =  new JButton("Existing MyCircle Conversations");
     private JButton createNewConvoButton =  new JButton("Create new MyCircle Convo");
@@ -25,13 +26,14 @@ public class MainMenu extends JFrame {
     MainMenu(Logger log, String yourUsername) {
         // Set the main menu panel parameters
         mainMenu.setResizable(false);
-        mainMenu.setSize(700,500);
+        mainMenu.setSize(700,500); // Is ignored because of button preferences
         mainMenu.setLocation(350,280);
         mainMenu.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Hook up logger to GUI
         this.log = log;
 
+        // The GridLayout panel to be inserted into the main frame
         final JPanel gridComponents = new JPanel();
         gridComponents.setLayout(new GridLayout(0,3));
 
@@ -51,52 +53,61 @@ public class MainMenu extends JFrame {
         gridComponents.add(managerModeButton);
         gridComponents.add(debugModeButton);
 
+        // Add the GridLayout panel to the main frame
         mainMenu.add(gridComponents);
 
-        //Display the window.
-        mainMenu.pack();
+        // Display the window
+        mainMenu.pack(); // Packs the gridlayout compactly
         mainMenu.setVisible(true);
         handleButtonAction(log, yourUsername);
 
         log.Log("GUI -- MainMenu properly loaded");
     }
 
-    private void handleButtonAction(Logger log, String yourUser) {
+    private void handleButtonAction(Logger log, String yourUsername) {
+        // Look at existing conversations -- NEED TO IMPLEMENT FRIENDCONVO
         existingConvosButton.addActionListener(
                 (ActionEvent e) -> {
-                    new ExistingConvos(log, yourUser);
+                    new ExistingConvos(log, yourUsername);
                 }
         );
+        // Send a new message -- COMPLETE
         createNewConvoButton.addActionListener(
                 (ActionEvent e) -> {
-                    new CreateNewConvo(log, yourUser);
+                    new CreateNewConvo(log, yourUsername);
                 }
         );
+        // Check out MyCircle -- NEED TO IMPLEMENT MYCIRCLE
         myCircleButton.addActionListener(
                 (ActionEvent e) -> {
 
                 }
         );
+        // Check out your ChatGroups -- NEED TO IMPLEMENT CHATGROUPS
         chatGroupsButton.addActionListener(
                 (ActionEvent e) -> {
 
                 }
         );
+        // Make a new ChatGroup -- COMPLETE
         createChatGroupsButton.addActionListener(
                 (ActionEvent e) -> {
-                    new NewChatGroup(log, yourUser);
+                    new NewChatGroup(log, yourUsername);
                 }
         );
+        // Browse messages
         browseMessagesButton.addActionListener(
                 (ActionEvent e) -> {
 
                 }
         );
+        // Enter Manager menu
         managerModeButton.addActionListener(
                 (ActionEvent e) -> {
 
                 }
         );
+        // Enter Debog menu
         debugModeButton.addActionListener(
                 (ActionEvent e) -> {
 

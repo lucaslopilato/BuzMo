@@ -6,8 +6,8 @@ import BuzMo.Logger.Logger;
  * This is a ConvoView for personal MyCircle messages.
  */
 public class FriendConvo {
-    // UNIMPLEMENTED UNTIL CONVOVIEW IS IMPLEMENTED
-    FriendConvo(Logger log, String username) {
+    // UNIMPLEMENTED FOR NOW
+    FriendConvo(Logger log, String yourUsername, String friendUsername) {
         System.out.println("Created a FriendConvo!");
     }
 }

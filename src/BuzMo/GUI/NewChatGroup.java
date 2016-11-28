@@ -17,7 +17,7 @@ public class NewChatGroup {
     private JTextField groupNameField = new JTextField();
     private JTextField recipientsField = new JTextField();
 
-    public NewChatGroup (Logger log, String username) {
+    public NewChatGroup (Logger log, String yourUsername) {
         // Hook up logger to GUI
         this.log = log;
 
@@ -53,15 +53,23 @@ public class NewChatGroup {
         // Add the login panel + ActionListeners to the Content Pane
         newChatGroupWindow.setContentPane(mainPanel);
         newChatGroupWindow.setVisible(true);
-        handleMessageSubmit();
 
-        log.Log("GUI -- LoginWindow properly loaded");
+        handleMessageSubmit(yourUsername);
+
+        log.Log("GUI -- NewChatGroup properly loaded");
     }
 
-    private void handleMessageSubmit() {
+    // ADD A SQL QUERY UPDATING THE TABLE
+    private void handleMessageSubmit(String yourUsername) {
         sendButton.addActionListener(
                 (ActionEvent e) -> {
-                    // ADD A SQL QUERY UPDATING THE TABLE
+                    // Convert the String of comma-separated Strings into a String Array, also strip whitespace
+                    String[] recipientsList = recipientsField.getText().split("\\s*,\\s*");
+                    String groupName = groupNameField.getText();
+
+                    for (int i=0; i<recipientsList.length; i++) {
+                        System.out.println(recipientsList[i] + " has been added to " + groupName + " by " + yourUsername);
+                    }
                     newChatGroupWindow.dispose();
                 }
         );
