@@ -83,6 +83,8 @@ public class Database {
 
         CreateDatabase init = new CreateDatabase(log,connection);
 
+        /*Begin Insert Functionality*/
+
     }
 
     //Closes all connections
@@ -95,9 +97,52 @@ public class Database {
     }
 
 
+    public Vector<String> getCircleOfFriends(String user)throws DatabaseException{
+        Vector<String> response = new Vector<>();
+        ResultSet rs;
+
+        if(!userExists(user)){
+            return null;
+        }
+        String sql = "SELECT * FROM circleOfFriends C WHERE C.user="+addTicks(user)+" OR C.friend="+addTicks(user);
+        Statement st = null;
+        try {
+            st = connection.createStatement();
+            st.execute(sql);
+            rs = st.getResultSet();
+
+            while(rs.next()){
+                String first = rs.getString("user");
+                if(first.compareTo(user) != 0){
+                    response.add(first);
+                }
+                else{
+                    response.add(rs.getString("friend"));
+                }
+            }
+
+            return response;
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
+    //public Insert addPrivateMessage(int id, String sender, String message, String timestamp,)
+
+    public Insert addPrivateMessage(int id, String sender, String message, String timestamp, Vector<String> recipients, Vector<String> topicWords){
+            return addMessage(id, sender, message, timestamp, recipients, false, topicWords);
+    }
+
+    public Insert addPublicMessage(int id, String sender, String message, String timestamp, Vector<String> topicWords){
+        try {
+            return addMessage(id, sender, message, timestamp, getCircleOfFriends(sender), true, topicWords);
+        }catch(Exception e){
+            return Insert.USR_NOEXIST;
+        }
+    }
 
     //Adds new private message
-    public Insert addMessage(int id, String sender, String message, String timestamp, Vector<String> recipients, boolean isPublic, Vector<String> topicWords){
+    private Insert addMessage(int id, String sender, String message, String timestamp, Vector<String> recipients, boolean isPublic, Vector<String> topicWords){
         String sql = "INSERT INTO Messages(message_id, sender, message, timestamp, is_public) VALUES (";
         try{
             if(!userExists(sender)){
@@ -139,10 +184,13 @@ public class Database {
 
         }catch (Exception e){
             log.Log("Invalid sql: "+ sql);
+            return Insert.INVALID;
         }
 
         return Insert.SUCCESS;
     }
+
+
 
 
     //Adds new Chat Group to the Database
