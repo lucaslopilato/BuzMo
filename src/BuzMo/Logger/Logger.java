@@ -14,7 +14,7 @@ public class Logger{
     //Log will be used for more execution based information, flow control, etc
     private FileHandler log;
     //Debug will be used to dump SQL queries and requests to check logic
-    private FileHandler debug;
+    private FileHandler sql;
     //Formatter determines the format of output files
     private LogFormatter format = new LogFormatter();
 
@@ -23,7 +23,7 @@ public class Logger{
 
     //Creates a new logger for BuzMo
     public Logger() throws Exception {
-        //Try to create FileHandlers for both debug and general logging
+        //Try to create FileHandlers for both sql and general logging
         try{
 
 
@@ -31,10 +31,10 @@ public class Logger{
             log = new FileHandler("Resources/"+currentDay+".log", false);
             log.setFormatter(format);
 
-            //Set up Debug
-            debug = new FileHandler("Resources/"+currentDay+".debug", false);
-            //might need to create new formatter for debug to nicely dump SQL
-            log.setFormatter(format);
+            //Set up sql
+            sql = new FileHandler("Resources/"+currentDay+".sql", false);
+            //might need to create new formatter for sql to nicely dump SQL
+            sql.setFormatter(format);
         }
         catch(IOException io){
             throw new LoggerException("IOError Initializing Logger", io);
@@ -48,7 +48,7 @@ public class Logger{
     public void dispose(){
         Log("\n\n");
         log.close();
-        debug.close();
+        sql.close();
     }
 
     //Writes an entry to the log file. All null messages are ignored silently
@@ -56,9 +56,13 @@ public class Logger{
         log.publish(new LogRecord(Level.ALL, message));
     }
 
-    //Writes an entry to the debug file. All null messages are ignored silently
-    public void Debug(String message){
-        debug.publish(new LogRecord(Level.ALL, message));
+    //Writes an entry to the sql file. All null messages are ignored silently
+    public void gSQL(String message){
+        sql.publish(new LogRecord(Level.ALL, "success: "+message));
+    }
+
+    public void bSQL(String message){
+        sql.publish(new LogRecord(Level.ALL, "error: "+message));
     }
 
 
