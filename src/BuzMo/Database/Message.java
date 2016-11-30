@@ -18,17 +18,19 @@ public class Message extends DatabaseObject{
         super(log, connection);
     }
 
-    public static boolean exists(Statement st, Integer messageID) throws DatabaseException {
-        String sql;
+    public static boolean exists(Logger log, Statement st, Integer messageID) throws DatabaseException {
+        String sql = "";
         try {
             sql = "SELECT COUNT(1) FROM messages WHERE message_id= " + messageID;
             st.execute(sql);
+            log.gSQL(sql);
 
             ResultSet res = st.getResultSet();
             res.first();
             return res.getInt(1) != 0;
 
         } catch (Exception e) {
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
     }
@@ -98,7 +100,7 @@ public class Message extends DatabaseObject{
                 return Insert.NOEXIST_USR;
             }
 
-            if(Message.exists(st, messageID)){
+            if(Message.exists(log, st, messageID)){
                 return Insert.DUPLICATE;
             }
 
@@ -110,10 +112,10 @@ public class Message extends DatabaseObject{
             sql += messageID + "," + addTicks(sender) + "," + addTicks(message) + "," + addTicks(timestamp) + "," + pub+")";
 
             st.execute(sql);
-            log.Log("wrote: "+ sql);
+            log.gSQL(sql);
 
             //Add all recipients
-            Insert addRecipients = MessageReceivers.insertRecipients(st, messageID, recipients);
+            Insert addRecipients = MessageReceivers.insertRecipients(log, st, messageID, recipients);
             if(addRecipients != Insert.SUCCESS){
                 log.Log("couldn't add msg recipients "+addRecipients.toString());
                 return addRecipients;
@@ -131,7 +133,7 @@ public class Message extends DatabaseObject{
 
 
         }catch (Exception e){
-            log.Log("Invalid sql: "+ sql);
+            log.bSQL(sql);
             log.Log(e.getMessage());
             return Insert.INVALID;
         }

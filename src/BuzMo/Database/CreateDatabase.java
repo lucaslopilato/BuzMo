@@ -20,12 +20,9 @@ class CreateDatabase {
     private Connection connection;
     private CSVLoader csv;
     private Message message;
-    private MessageReceivers messageReceivers;
-    private MessageTopicWords messageTopicWords;
     private UserTopicWords userTopicWords;
     private CircleOfFriends circleOfFriends;
     private ChatGroups chatGroups;
-    private ChatGroupMembers chatGroupMembers;
     private Database database;
 
      CreateDatabase(Logger log, Connection connection, Database db) throws DatabaseException{
@@ -36,14 +33,9 @@ class CreateDatabase {
 
         //Initialize CRUD Classes
          this.message = new Message(log, connection);
-         this.messageReceivers = new MessageReceivers(log,connection);
-         this.messageTopicWords = new MessageTopicWords(log, connection);
          this.userTopicWords = new UserTopicWords(log, connection);
          this.circleOfFriends = new CircleOfFriends(log, connection);
          this.chatGroups = new ChatGroups(log, connection);
-         this.chatGroupMembers = new ChatGroupMembers(log, connection);
-
-
 
          //Drop all tables before adding
          dropAllTables();
@@ -149,6 +141,7 @@ class CreateDatabase {
         try{
             Statement st = connection.createStatement();
             st.execute(sql);
+            log.gSQL(sql);
             log.Log("wrote "+tableName+" to the database");
         }
         catch(SQLException e){
@@ -156,6 +149,7 @@ class CreateDatabase {
                 log.Log(e.getMessage());
             }
             else{
+                log.bSQL(sql);
                 throw new DatabaseException("Error writing tables to the database",e);
             }
         }
@@ -201,6 +195,7 @@ class CreateDatabase {
         InsertUsers();
         InsertFriends();
         InsertIndividualFriends();
+        InsertUserTopicWords();
 
         //InsertMessages();
         InsertDirectMessages();
@@ -210,6 +205,8 @@ class CreateDatabase {
         //Insert Groups
         InsertGroups();
         InsertGroupMsgs();
+
+        SetManagers();
     }
 
     //Input Users into Users table
@@ -280,7 +277,7 @@ class CreateDatabase {
         while ((line = csv.getNextLine()) != null) {
             Vector<String> recipients = new Vector<>();
             recipients.add(line[2]);
-            message.insertPrivateMsg(database.getNewMsg(),line[1],line[3],line[4], recipients).toString();
+            message.insertPrivateMsg(database.getNewMsg(),line[1],line[3],line[4], recipients);
         }
     }
 
@@ -339,7 +336,7 @@ class CreateDatabase {
             }
             String msg = line[i];
             i++;
-            String time = line[i];;
+            String time = line[i];
             for(i = i+1; i<line.length; i++){
                 topics.add(line[i]);
             }
@@ -349,5 +346,36 @@ class CreateDatabase {
 
     }
 
+    private void InsertUserTopicWords() throws DatabaseException{
+        csv.loadCSV("usrTopicWords.csv");
+        String[] line;
+
+        while ((line = csv.getNextLine()) != null) {
+            Vector<String> topics = new Vector<>();
+            for(int i=1; i<line.length; i++) {
+                topics.add(line[i]);
+            }
+
+            userTopicWords.insert(line[0],topics);
+        }
+    }
+
+    private void SetManagers() throws DatabaseException{
+        csv.loadCSV("managers.csv");
+        String[] line;
+
+        while((line = csv.getNextLine()) != null){
+            String sql = "UPDATE users SET isManager=TRUE WHERE email_address="+line[0];
+            try {
+                Statement st = connection.createStatement();
+                st.execute(sql);
+                log.gSQL(sql);
+            } catch (SQLException e) {
+                log.bSQL(sql);
+                throw new DatabaseException(e);
+            }
+
+        }
+    }
 
 }

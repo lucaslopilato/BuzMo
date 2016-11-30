@@ -18,18 +18,20 @@ public class ChatGroups extends DatabaseObject{
         super(log, connection);
     }
 
-    public static boolean exists(Statement st, String name) throws DatabaseException{
-        String sql;
+    public static boolean exists(Logger log, Statement st, String name) throws DatabaseException{
+        String sql = "";
 
         try {
             sql = "SELECT COUNT(1) FROM chatgroups WHERE group_name = " + addTicks(name);
             st.execute(sql);
+            log.gSQL(sql);
 
             ResultSet res = st.getResultSet();
             res.first();
             return res.getInt(1) != 0;
 
         } catch (Exception e) {
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
     }
@@ -56,7 +58,7 @@ public class ChatGroups extends DatabaseObject{
             return Insert.NOEXIST_USR;
         }
 
-        if(ChatGroups.exists(st, name)){
+        if(ChatGroups.exists(log, st, name)){
             log.Log("Chatgroup "+name+" already exists");
             return Insert.DUPLICATE;
         }
@@ -66,7 +68,7 @@ public class ChatGroups extends DatabaseObject{
 
         try {
             st.execute(sql);
-            log.Log("sql executed "+ sql);
+            log.gSQL(sql);
 
             //Insert the owner of the chatgroup to the members if the owner is not already there
             if(!ChatGroupMembers.members(log,st,name).contains(owner)) {
@@ -80,7 +82,7 @@ public class ChatGroups extends DatabaseObject{
             }
 
         } catch (SQLException e) {
-            log.Log("invalid sql: "+sql);
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
 

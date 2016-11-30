@@ -61,8 +61,9 @@ public class UserTopicWords extends DatabaseObject {
 
             try {
                 st.execute(sql);
+                log.gSQL(sql);
             } catch (SQLException e) {
-                log.Log("Invalid SQL: "+sql);
+                log.bSQL(sql);
                 throw new DatabaseException(e);
             }
         }

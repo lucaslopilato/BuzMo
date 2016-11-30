@@ -30,6 +30,7 @@ public class CircleOfFriends extends DatabaseObject {
         String sql = "SELECT * FROM circleOfFriends C WHERE C.user="+addTicks(userID)+" OR C.friend="+addTicks(userID);
         try {
             st.execute(sql);
+            log.gSQL(sql);
             ResultSet rs = st.getResultSet();
 
             while(rs.next()){
@@ -45,7 +46,7 @@ public class CircleOfFriends extends DatabaseObject {
             log.Log("Circle of Friends Retrieved for user "+userID);
             return response;
         } catch (SQLException e) {
-            log.Log("Invalid SQL: "+sql);
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
     }
@@ -72,8 +73,9 @@ public class CircleOfFriends extends DatabaseObject {
         String sql = "INSERT INTO circleoffriends (user,friend) VALUES (" +addTicks(user1)+","+addTicks(user2)+")";
         try {
             st.execute(sql);
+            log.gSQL(sql);
         } catch (SQLException e) {
-            log.Log("Invalid SQL: "+sql);
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
         return Insert.SUCCESS;

@@ -24,12 +24,13 @@ public class MessageReceivers extends DatabaseObject {
         Vector<String> response = new Vector<>();
 
         //Check if the user exists
-        if(!Message.exists(st,messageID)){
+        if(!Message.exists(log, st,messageID)){
             throw new DatabaseException("Cannot find recipients for non existent message: "+messageID);
         }
         String sql = "SELECT recipient FROM messagereceivers C WHERE C.message_id="+messageID;
         try {
             st.execute(sql);
+            log.gSQL(sql);
             ResultSet rs = st.getResultSet();
 
             while(rs.next()){
@@ -39,7 +40,7 @@ public class MessageReceivers extends DatabaseObject {
             log.Log("Recipients retrieved for "+messageID);
             return response;
         } catch (SQLException e) {
-            log.Log("Invalid SQL: "+sql);
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
     }
@@ -47,13 +48,13 @@ public class MessageReceivers extends DatabaseObject {
 
     //Attempt to insert recipients for a message
     //Function intended as a helper
-    public static Insert insertRecipients(Statement st, int messageID, Vector<String> userList) throws DatabaseException{
+    public static Insert insertRecipients(Logger log, Statement st, int messageID, Vector<String> userList) throws DatabaseException{
 
         if(userList == null){
             return Insert.SUCCESS;
         }
 
-        if(!Message.exists(st, messageID)){
+        if(!Message.exists(log, st, messageID)){
             return Insert.NOEXIST_MSG;
         }
 
@@ -70,7 +71,9 @@ public class MessageReceivers extends DatabaseObject {
 
             try {
                 st.execute(sql);
+                log.gSQL(sql);
             } catch (SQLException e) {
+                log.bSQL(sql);
                 throw new DatabaseException(e);
             }
         }
