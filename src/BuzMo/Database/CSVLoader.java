@@ -15,6 +15,7 @@ class CSVLoader {
     private InputStream in = null;
     private InputStreamReader inr = null;
     private String delimiter = ",";
+    private String fileName;
 
     CSVLoader(Logger log){
         this.log = log;
@@ -22,6 +23,8 @@ class CSVLoader {
 
     //Loads a new csvFile csvFile and saves a reference to it
     void loadCSV(String csvFile){
+        fileName = csvFile;
+
         //Initialize all classes needed to read csv
         try{
             this.br.close();
@@ -68,7 +71,7 @@ class CSVLoader {
             }
 
 
-            log.Log("successfully read a line");
+            log.Log("successfully read a line of "+fileName);
             return line.split(delimiter);
         }
         catch(Exception e){
