@@ -48,7 +48,6 @@ public class MessageReceivers extends DatabaseObject {
     //Attempt to insert recipients for a message
     //Function intended as a helper
     public static Insert insertRecipients(Statement st, int messageID, Vector<String> userList) throws DatabaseException{
-        String sql = "INSERT INTO messagereceivers (message_id, recipient) VALUES (";
 
         if(userList == null){
             return Insert.SUCCESS;
@@ -61,6 +60,8 @@ public class MessageReceivers extends DatabaseObject {
         //Check if the message exists
         //Associate each user with a messageID
         for(String s: userList){
+            String sql = "INSERT INTO messagereceivers (message_id, recipient) VALUES (";
+
             if(!User.exists(st, s)){
                 return Insert.NOEXIST_USR;
             }

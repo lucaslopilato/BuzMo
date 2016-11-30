@@ -72,7 +72,15 @@ class CSVLoader {
 
 
             log.Log("successfully read a line of "+fileName);
-            return line.split(delimiter);
+            String[] response = line.split(delimiter);
+
+            //Change special characters and replace 's for SQL
+            for(int i=0; i< response.length; i++){
+                response[i] = response[i].replace('|',',');
+                response[i] = response[i].replaceAll("'", "\'\'").trim();
+            }
+
+            return response;
         }
         catch(Exception e){
             throw new DatabaseException(e);

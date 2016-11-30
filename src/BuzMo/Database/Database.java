@@ -81,7 +81,7 @@ public class Database {
         }
         log.Log("Database properly loaded");
 
-        CreateDatabase init = new CreateDatabase(log,connection);
+        CreateDatabase init = new CreateDatabase(log,connection, this);
 
     }
 
@@ -92,6 +92,12 @@ public class Database {
         } catch (SQLException e) {
             throw new DatabaseException("Error attempting to close SQL connection");
         }
+    }
+
+    //Gets
+    public int getNewMsg(){
+        newMsg++;
+        return newMsg - 1;
     }
 
 }

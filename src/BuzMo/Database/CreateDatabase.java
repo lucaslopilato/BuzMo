@@ -26,11 +26,13 @@ class CreateDatabase {
     private CircleOfFriends circleOfFriends;
     private ChatGroups chatGroups;
     private ChatGroupMembers chatGroupMembers;
+    private Database database;
 
-     CreateDatabase(Logger log, Connection connection) throws DatabaseException{
+     CreateDatabase(Logger log, Connection connection, Database db) throws DatabaseException{
         this.log = log;
         this.connection = connection;
         this.csv = new CSVLoader(log);
+        this.database = db;
 
         //Initialize CRUD Classes
          this.message = new Message(log, connection);
@@ -92,7 +94,7 @@ class CreateDatabase {
                 "message_id INTEGER," +
                 "sender VARCHAR(20)," +
                 "message VARCHAR(1400)," +
-                "timestamp VARCHAR(20)," +
+                "timestamp VARCHAR(30)," +
                 "is_public BOOLEAN," +
                 "PRIMARY KEY(message_id))";
                 //Check if message is public, topic words cannot be null
@@ -205,6 +207,7 @@ class CreateDatabase {
 
         //Insert Groups
         InsertGroups();
+        InsertGroupMsgs();
     }
 
     //Input Users into Users table
@@ -273,10 +276,9 @@ class CreateDatabase {
         String[] line;
 
         while ((line = csv.getNextLine()) != null) {
-            line[4] = line[4].replace('|',',');
             Vector<String> recipients = new Vector<>();
             recipients.add(line[2]);
-            message.insertPrivateMsg(new Integer(line[0]),line[1],line[3],line[4], recipients).toString();
+            message.insertPrivateMsg(database.getNewMsg(),line[1],line[3],line[4], recipients).toString();
         }
     }
 
@@ -294,7 +296,15 @@ class CreateDatabase {
     }
 
 
+    //Inserts init group messages
+    private void InsertGroupMsgs() throws DatabaseException{
+        csv.loadCSV("groupMsg.csv");
+        String[] line;
 
+        while ((line = csv.getNextLine()) != null) {
+            System.out.println(message.insertPrivateGroupMessage(database.getNewMsg(),line[1],line[2],line[3],line[0]));
+        }
+    }
 
 
 

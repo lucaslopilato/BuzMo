@@ -115,12 +115,14 @@ public class Message extends DatabaseObject{
             //Add all recipients
             Insert addRecipients = MessageReceivers.insertRecipients(st, messageID, recipients);
             if(addRecipients != Insert.SUCCESS){
+                log.Log("couldn't add msg recipients "+addRecipients.toString());
                 return addRecipients;
             }
 
 
             //Make sure public messages have at least one topic words
             if(isPublic && topicWords.isEmpty()) {
+                log.Log("cannot have empty topic words on public message" + message);
                 return Insert.EMPTY_TOPIC_WORDS;
             }
 
