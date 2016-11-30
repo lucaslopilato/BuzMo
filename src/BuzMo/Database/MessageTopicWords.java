@@ -24,6 +24,7 @@ public class MessageTopicWords extends DatabaseObject{
         String sql = "SELECT word FROM messagetopicwords WHERE message_id="+messageID;
         try {
             st.execute(sql);
+            log.gSQL(sql);
 
             //Get results
             ResultSet rs = st.getResultSet();
@@ -31,7 +32,7 @@ public class MessageTopicWords extends DatabaseObject{
                 response.add(rs.getString(1));
             }
         } catch (SQLException e) {
-            log.Log("Invalid SQL: "+sql);
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
 
@@ -41,10 +42,12 @@ public class MessageTopicWords extends DatabaseObject{
     //Insert New Topic Words
     public static Insert insert(Logger log, Statement st, int messageID, Vector<String> words) throws DatabaseException {
         if(words == null){
+            log.Log("no topic words added for message "+messageID);
             return Insert.SUCCESS;
         }
 
         if(!Message.exists(st, messageID)){
+            log.Log("cannot add topic words, message "+messageID+" doesn't exist");
             return Insert.NOEXIST_MSG;
         }
 
@@ -57,13 +60,14 @@ public class MessageTopicWords extends DatabaseObject{
                 return Insert.DUPLICATE;
             }
 
-            sql = "INSERT INTO usertopicwords(user,word) VALUES (" +
+            sql = "INSERT INTO messagetopicwords(message_id,word) VALUES (" +
                     messageID+","+addTicks(word)+")";
 
             try {
                 st.execute(sql);
+                log.gSQL(sql);
             } catch (SQLException e) {
-                log.Log("Invalid SQL: "+sql);
+                log.bSQL(sql);
                 throw new DatabaseException(e);
             }
         }

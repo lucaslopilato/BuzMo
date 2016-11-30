@@ -204,6 +204,8 @@ class CreateDatabase {
 
         //InsertMessages();
         InsertDirectMessages();
+        InsertPrivateTopicMsg();
+        InsertPublicMsg();
 
         //Insert Groups
         InsertGroups();
@@ -295,17 +297,57 @@ class CreateDatabase {
         }
     }
 
-
     //Inserts init group messages
     private void InsertGroupMsgs() throws DatabaseException{
         csv.loadCSV("groupMsg.csv");
         String[] line;
 
         while ((line = csv.getNextLine()) != null) {
-            System.out.println(message.insertPrivateGroupMessage(database.getNewMsg(),line[1],line[2],line[3],line[0]));
+            message.insertPrivateGroupMessage(database.getNewMsg(),line[1],line[2],line[3],line[0]);
         }
     }
 
+    private void InsertPublicMsg() throws DatabaseException{
+        csv.loadCSV("publicMsg.csv");
+        String[] line;
+
+        while ((line = csv.getNextLine()) != null) {
+            Vector<String> topics = new Vector<>();
+            for(int i=3; i<line.length; i++){
+                topics.add(line[i]);
+            }
+            message.insertPublicMessage(database.getNewMsg(),line[0],line[1],line[2],topics);
+        }
+    }
+
+    private void InsertPrivateTopicMsg() throws DatabaseException{
+        csv.loadCSV("privateMsgTopic.csv");
+        String[] line;
+
+        while ((line = csv.getNextLine()) != null) {
+            Vector<String> topics = new Vector<>();
+            Vector<String> recipients = new Vector<>();
+            int i;
+
+            for(i=1; i<line.length; i++){
+                String current = line[i];
+                if(current.indexOf('@') == -1)
+                    break;
+                else{
+                    recipients.add(current);
+                }
+            }
+            String msg = line[i];
+            i++;
+            String time = line[i];;
+            for(i = i+1; i<line.length; i++){
+                topics.add(line[i]);
+            }
+
+            message.insertPrivateMsg(database.getNewMsg(),line[0],msg, time, topics,recipients);
+        }
+
+    }
 
 
 }

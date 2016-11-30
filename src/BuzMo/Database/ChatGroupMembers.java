@@ -29,6 +29,7 @@ public class ChatGroupMembers extends DatabaseObject {
         String sql = "SELECT member FROM chatgroupmembers C WHERE C.group_name="+addTicks(groupName);
         try {
             st.execute(sql);
+            log.gSQL(sql);
             ResultSet rs = st.getResultSet();
 
             while(rs.next()){
@@ -38,7 +39,7 @@ public class ChatGroupMembers extends DatabaseObject {
             log.Log("Members retrieved for "+groupName);
             return response;
         } catch (SQLException e) {
-            log.Log("Invalid SQL: "+sql);
+            log.bSQL(sql);
             throw new DatabaseException(e);
         }
     }
@@ -66,9 +67,9 @@ public class ChatGroupMembers extends DatabaseObject {
 
             try {
                 st.execute(sql);
-                log.Log("successfully wrote sql: "+sql);
+                log.gSQL(sql);
             } catch (SQLException e) {
-                log.Log("sql error "+e.getMessage());
+                log.bSQL(sql);
                 throw new DatabaseException(e);
             }
         }

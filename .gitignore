@@ -3,6 +3,7 @@
 ###BuzMo Specific Files###
 *.debug
 *.log
+*.sql
 Resources/config.properties
 
 ### Intellij ###
