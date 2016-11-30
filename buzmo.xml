@@ -71,27 +71,31 @@
   </path>
   
   <path id="buzmo.module.production.classpath">
-    <pathelement location="${basedir}/../../Downloads/ojdbc6.jar"/>
-    <pathelement location="${basedir}/../../Downloads/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar"/>
+    <fileset dir="${basedir}/Dependencies">
+      <patternset refid="library.patterns"/>
+    </fileset>
   </path>
   
   <path id="buzmo.runtime.production.module.classpath">
     <pathelement location="${buzmo.output.dir}"/>
-    <pathelement location="${basedir}/../../Downloads/ojdbc6.jar"/>
-    <pathelement location="${basedir}/../../Downloads/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar"/>
+    <fileset dir="${basedir}/Dependencies">
+      <patternset refid="library.patterns"/>
+    </fileset>
   </path>
   
   <path id="buzmo.module.classpath">
     <pathelement location="${buzmo.output.dir}"/>
-    <pathelement location="${basedir}/../../Downloads/ojdbc6.jar"/>
-    <pathelement location="${basedir}/../../Downloads/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar"/>
+    <fileset dir="${basedir}/Dependencies">
+      <patternset refid="library.patterns"/>
+    </fileset>
   </path>
   
   <path id="buzmo.runtime.module.classpath">
     <pathelement location="${buzmo.testoutput.dir}"/>
     <pathelement location="${buzmo.output.dir}"/>
-    <pathelement location="${basedir}/../../Downloads/ojdbc6.jar"/>
-    <pathelement location="${basedir}/../../Downloads/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar"/>
+    <fileset dir="${basedir}/Dependencies">
+      <patternset refid="library.patterns"/>
+    </fileset>
   </path>
   
   
