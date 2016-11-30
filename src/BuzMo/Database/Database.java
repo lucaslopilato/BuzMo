@@ -69,6 +69,17 @@ public class Database {
         }
         //Otherwise establish Oracle connection
         else{
+            try {
+                Class.forName("oracle.jdbc.driver.OracleDriver");
+                String url = "jdbc:oracle:thin:@uml.cs.ucsb.edu:1521:xe";
+                String username = properties.getUsername();
+                String password = properties.getPassword();
+                this.connection = DriverManager.getConnection(url, username, password);
+            }
+            catch(Exception e){
+                log.Log("Error initializing oracle datasource");
+                throw new DatabaseException(e);
+            }
 
         }
 
