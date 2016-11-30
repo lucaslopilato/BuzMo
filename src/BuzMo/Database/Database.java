@@ -20,7 +20,7 @@ import java.util.Vector;
  *
  */
 public class Database {
-    private boolean CSIL = false;
+    private boolean CSIL = true;
 
     private Logger log = null;
     private Connection connection = null;

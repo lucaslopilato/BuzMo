@@ -1,7 +1,6 @@
 package BuzMo.Database;
 
 import BuzMo.Logger.Logger;
-import sun.rmi.runtime.Log;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
