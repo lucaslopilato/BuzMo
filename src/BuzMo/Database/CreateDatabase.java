@@ -364,17 +364,12 @@ class CreateDatabase {
         csv.loadCSV("managers.csv");
         String[] line;
 
-        while((line = csv.getNextLine()) != null){
-            String sql = "UPDATE users SET isManager=TRUE WHERE email_address="+line[0];
-            try {
-                Statement st = connection.createStatement();
-                st.execute(sql);
-                log.gSQL(sql);
-            } catch (SQLException e) {
-                log.bSQL(sql);
-                throw new DatabaseException(e);
+        try {
+            while ((line = csv.getNextLine()) != null) {
+                User.makeManager(log, connection.createStatement(),line[0]);
             }
-
+        }catch(Exception e){
+            throw new DatabaseException(e);
         }
     }
 

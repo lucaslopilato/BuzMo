@@ -20,13 +20,16 @@ import java.util.Vector;
  *
  */
 public class Database {
-    private Logger log;
-    private Connection connection;
-    private AppProperties properties;
+    private boolean CSIL = false;
+
+    private Logger log = null;
+    private Connection connection = null;
+    private AppProperties properties = null;
     private int newMsg = 0;
 
-    //private OracleDataSource source;
-    private MysqlDataSource source;
+    private OracleDataSource Osource = null;
+    private MysqlDataSource Msource = null;
+
 
     //Choose which URL to use depending on where you are running the program
     //private String url = "jdbc:oracle:thin:@uml.cs.ucsb.edu:1521:xe";
@@ -38,8 +41,36 @@ public class Database {
         //Hook up the log to the JDBC Class
         this.log = log;
 
-        //MySQL driver usage since SQLPlus sucks
-        this.source = new MysqlDataSource();
+        if(!CSIL) {
+            //MySQL driver usage since SQLPlus sucks
+            this.Msource = new MysqlDataSource();
+
+            //Establish the connection to the database
+            try {
+                //Read in Properties
+                properties = new AppProperties(log, CSIL);
+                String username = properties.getUsername();
+                String password = properties.getPassword();
+
+                Msource.setUser(username);
+                Msource.setPassword(password);
+            } catch (PropertiesException pe) {
+                throw new DatabaseException(pe);
+            }
+
+            //Establish MySQL connection
+            try {
+                Msource.setURL("jdbc:mysql://localhost/buzmo");
+                this.connection = Msource.getConnection();
+            } catch (SQLException sql) {
+                throw new DatabaseException("Error establishing SQL connection", sql);
+            }
+            log.Log("MySQL Database properly loaded");
+        }
+        //Otherwise establish Oracle connection
+        else{
+
+        }
 
 
         //Oracle OJDBC
@@ -58,28 +89,10 @@ public class Database {
             throw new DatabaseException("Error trying to Initialize Oracle Data Source", sql);
         }*/
 
-        //Establish the connection to the database
-        try {
-            //Read in Properties
-            properties = new AppProperties(log);
-            String username = properties.getUsername();
-            String password = properties.getPassword();
-
-            source.setUser(username);
-            source.setPassword(password);
-        } catch (PropertiesException pe) {
-            throw new DatabaseException(pe);
-        }
 
 
-        //Establish MySQL connection
-        try {
-            source.setURL("jdbc:mysql://localhost/buzmo");
-            this.connection = source.getConnection();
-        } catch (SQLException sql) {
-            throw new DatabaseException("Error establishing connection", sql);
-        }
-        log.Log("Database properly loaded");
+
+
 
         CreateDatabase init = new CreateDatabase(log,connection, this);
 

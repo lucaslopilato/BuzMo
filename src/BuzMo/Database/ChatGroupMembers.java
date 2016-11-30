@@ -23,7 +23,7 @@ public class ChatGroupMembers extends DatabaseObject {
         Vector<String> response = new Vector<>();
 
         //Check if the user exists
-        if(!ChatGroups.exists(st,groupName)){
+        if(!ChatGroups.exists(log, st,groupName)){
             throw new DatabaseException("Cannot find recipients for non existent group: "+groupName);
         }
         String sql = "SELECT member FROM chatgroupmembers C WHERE C.group_name="+addTicks(groupName);
@@ -48,7 +48,7 @@ public class ChatGroupMembers extends DatabaseObject {
     //Attempt to insert members for a chat group
     public Insert insertMembers(String groupName, Vector<String> members) throws DatabaseException{
 
-        if(!ChatGroups.exists(st, groupName)){
+        if(!ChatGroups.exists(log, st, groupName)){
 
             return Insert.NOEXIST_GROUP;
         }

@@ -2,6 +2,7 @@ package BuzMo.Database;
 
 import BuzMo.Logger.Logger;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -126,5 +127,42 @@ public class User extends DatabaseObject{
         return Insert.SUCCESS;
 
     }
+
+    //makeManager
+    public static Insert makeManager(Logger log, Statement st, String email) throws DatabaseException{
+        if(!User.exists(st, email)){
+            return Insert.NOEXIST_USR;
+        }
+
+        String sql = "UPDATE users SET isManager=TRUE WHERE email_address="+addTicks(email);
+        try {
+            st.execute(sql);
+            log.gSQL(sql);
+        } catch (SQLException e) {
+            log.bSQL(sql);
+            throw new DatabaseException(e);
+        }
+
+        return Insert.SUCCESS;
+    }
+
+    //makeManager
+    public static Insert makeUser(Logger log, Statement st, String email) throws DatabaseException{
+        if(!User.exists(st, email)){
+            return Insert.NOEXIST_USR;
+        }
+
+        String sql = "UPDATE users SET isManager=FALSE WHERE email_address="+addTicks(email);
+        try {
+            st.execute(sql);
+            log.gSQL(sql);
+        } catch (SQLException e) {
+            log.bSQL(sql);
+            throw new DatabaseException(e);
+        }
+
+        return Insert.SUCCESS;
+    }
+
 
 }
