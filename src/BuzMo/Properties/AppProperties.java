@@ -13,10 +13,12 @@ import java.util.Properties;
 public class AppProperties {
     private Properties prop = new Properties();
     private Logger log;
+    private boolean CSIL;
 
-    public AppProperties(Logger log) throws PropertiesException{
+    public AppProperties(Logger log, boolean CSIL) throws PropertiesException{
         //Hook up Properties to log
         this.log = log;
+        this.CSIL = CSIL;
 
         //Read in the config.properties file
         try{
@@ -42,7 +44,7 @@ public class AppProperties {
 
     public String getUsername() throws PropertiesException{
         //Look up the Username Property
-        String response = prop.getProperty("db_u", "");
+        String response = CSIL ? prop.getProperty("xe_u", "") : prop.getProperty("db_u", "");
 
         //If no username value found, throw an error
         if(response.compareTo("") == 0){
@@ -57,7 +59,7 @@ public class AppProperties {
 
     public String getPassword() throws PropertiesException {
         //Look up the password Property
-        String response = prop.getProperty("db_p", "");
+        String response = CSIL ? prop.getProperty("xe_p", "") : prop.getProperty("db_p", "");
 
         //If no username value found, throw an error
         if (response.compareTo("") == 0) {
