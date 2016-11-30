@@ -19,7 +19,7 @@ public class User extends DatabaseObject{
     private String screenname = null;
 
     //Base Information for a user
-    public User(Logger log, Connection connection, String name ,String phoneNumber, String email, String password) throws DatabaseException {
+    public User(Logger log, Connection connection, String name , String email, String password, String phoneNumber) throws DatabaseException {
         super(log, connection);
         this.name = name;
         this.phoneNumber = phoneNumber;
@@ -45,7 +45,7 @@ public class User extends DatabaseObject{
     }
 
     //Initialize User with optional screenname
-    public User(Logger log, Connection connection, String name, String phoneNumber, String email, String password, String screenname) throws DatabaseException {
+    public User(Logger log, Connection connection, String name, String email, String password, String phoneNumber,   String screenname) throws DatabaseException {
         super(log, connection);
         this.name = name;
         this.phoneNumber = phoneNumber;

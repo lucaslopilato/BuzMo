@@ -177,8 +177,8 @@ class CreateDatabase {
     private void inputInfo() throws DatabaseException
     {
         InsertUsers();
-        InsertFriends();
-        InsertIndividualFriends();
+        //InsertFriends();
+        //InsertIndividualFriends();
 
         //InsertMessages();
     }
@@ -197,32 +197,15 @@ class CreateDatabase {
         String[] data;
 
         try {
+            Statement st = connection.createStatement();
+
             while ((data = csv.getNextLine()) != null) {
                 //Format Base SQL for table insert
-                String sql = "INSERT INTO " + "users" + " (";
-                for (int i = 0; i < numFields; i++) {
-                    sql += fields[i];
-                    if (i != numFields - 1)
-                        sql += ',';
-                }
-
-                sql += " ) VALUES ( ";
-
-                for (int i = 0; i < numFields; i++) {
-                    sql += "'" + data[i] + "'";
-                    if (i != numFields - 1)
-                        sql += ',';
-                }
-
-                sql += ")";
-
-                log.Log("attempting to write " + sql);
-
-                Statement st = connection.createStatement();
-                st.execute(sql);
-
-                log.Log("line successfully inserted into users");
+                User u = new User(log,connection,data[0], data[1], data[2], data[3]);
+                User.insert(st, u, false);
             }
+
+            st.close();
         }
         catch(Exception e){
             throw new DatabaseException(e);
