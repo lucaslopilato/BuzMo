@@ -5,6 +5,7 @@ import BuzMo.Logger.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 
 /**
@@ -18,7 +19,7 @@ public class ChatGroupMembers extends DatabaseObject {
     }
 
     //Gets a list of all recipients for a specific message
-    public Vector<String> members(String groupName) throws DatabaseException{
+    public static Vector<String> members(Logger log, Statement st, String groupName) throws DatabaseException{
         Vector<String> response = new Vector<>();
 
         //Check if the user exists

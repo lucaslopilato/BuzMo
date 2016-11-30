@@ -1,10 +1,12 @@
 package BuzMo.Database;
 
 import BuzMo.Logger.Logger;
+import sun.rmi.runtime.Log;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 
 /**
@@ -18,7 +20,7 @@ public class CircleOfFriends extends DatabaseObject {
 
     //Get the circle of Friends for a user
     //Note: Does not contain the user whose circle it is
-    public Vector<String> getCircleOfFriends(String userID)throws DatabaseException{
+    public static Vector<String> getCircleOfFriends(Logger log, Statement st, String userID)throws DatabaseException{
         Vector<String> response = new Vector<>();
 
         //Check if the user exists

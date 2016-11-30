@@ -5,6 +5,7 @@ import BuzMo.Logger.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 
 /**
@@ -46,8 +47,12 @@ public class MessageReceivers extends DatabaseObject {
 
     //Attempt to insert recipients for a message
     //Function intended as a helper
-    Insert insertRecipients(int messageID, Vector<String> userList) throws DatabaseException{
+    public static Insert insertRecipients(Statement st, int messageID, Vector<String> userList) throws DatabaseException{
         String sql = "INSERT INTO messagereceivers (message_id, recipient) VALUES (";
+
+        if(userList == null){
+            return Insert.SUCCESS;
+        }
 
         if(!Message.exists(st, messageID)){
             return Insert.NOEXIST_MSG;

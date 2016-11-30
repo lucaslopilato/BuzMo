@@ -83,6 +83,16 @@ public class Database {
 
         CreateDatabase init = new CreateDatabase(log,connection);
 
+        User test = new User(log,connection,"test","1234","test@test","lop");
+        try {
+            User.insert(connection.createStatement(), test, false);
+            CircleOfFriends circle = new CircleOfFriends(log,connection);
+            circle.addFriends("test@test", "DurantKev@gmail.com");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         /*Begin Insert Functionality*/
 
     }
@@ -97,35 +107,7 @@ public class Database {
     }
 
 
-    public Vector<String> getCircleOfFriends(String user)throws DatabaseException{
-        Vector<String> response = new Vector<>();
-        ResultSet rs;
-
-        if(!userExists(user)){
-            return null;
-        }
-        String sql = "SELECT * FROM circleOfFriends C WHERE C.user="+addTicks(user)+" OR C.friend="+addTicks(user);
-        Statement st = null;
-        try {
-            st = connection.createStatement();
-            st.execute(sql);
-            rs = st.getResultSet();
-
-            while(rs.next()){
-                String first = rs.getString("user");
-                if(first.compareTo(user) != 0){
-                    response.add(first);
-                }
-                else{
-                    response.add(rs.getString("friend"));
-                }
-            }
-
-            return response;
-        } catch (SQLException e) {
-            throw new DatabaseException(e);
-        }
-    }
+ /*
 
     //public Insert addPrivateMessage(int id, String sender, String message, String timestamp,)
 
@@ -140,56 +122,6 @@ public class Database {
             return Insert.USR_NOEXIST;
         }
     }
-
-    //Adds new private message
-    private Insert addMessage(int id, String sender, String message, String timestamp, Vector<String> recipients, boolean isPublic, Vector<String> topicWords){
-        String sql = "INSERT INTO Messages(message_id, sender, message, timestamp, is_public) VALUES (";
-        try{
-            if(!userExists(sender)){
-                return Insert.USR_NOEXIST;
-            }
-
-            if(msgExists(id)){
-                return Insert.OBJ_EXISTS;
-            }
-
-            sql += id + "," + addTicks(sender) + "," + addTicks(message) + "," + addTicks(timestamp) + "," + isPublic+")";
-
-            Statement st = connection.createStatement();
-            st.execute(sql);
-            log.Log("wrote: "+ sql);
-
-            //Add all recipients
-            for(String s: recipients){
-                if(!userExists(s)){
-                    return Insert.USR_NOEXIST;
-                }
-
-                sql = "INSERT INTO messageReceivers (message_id, recipient) VALUES (" + id +","+addTicks(s) + ")";
-                st.execute(sql);
-                log.Log("wrote: "+sql);
-            }
-
-            //Add all
-            if(isPublic && topicWords.isEmpty()) {
-                return Insert.EMPTY_TOPIC_WORDS;
-            }
-
-            for(String s: topicWords){
-                sql = "INSERT INTO MessageTopicWords (message_id, word) VALUES (" + id +","+addTicks(s)+")";
-                st.execute(sql);
-                log.Log("wrote: "+sql);
-            }
-
-
-        }catch (Exception e){
-            log.Log("Invalid sql: "+ sql);
-            return Insert.INVALID;
-        }
-
-        return Insert.SUCCESS;
-    }
-
 
 
 
@@ -235,36 +167,7 @@ public class Database {
         return Insert.SUCCESS;
     }
 
-    //Surrounds a string with ticks
-    private String addTicks(String original){
-        if(original.charAt(0) == '\'')
-            return original;
-        return "'"+original+"'";
-    }
 
-    //Checks if a user exists by email
-    private boolean userExists(String user) throws DatabaseException{
-        String sql;
-        try {
-            Statement st = connection.createStatement();
-            sql = "SELECT COUNT(1) FROM Users WHERE email_address = " + addTicks(user);
-            st.execute(sql);
-
-            ResultSet res = st.getResultSet();
-            res.first();
-            if (res.getInt(1)!= 0) {
-                return true;
-            }
-            else{
-                return false;
-            }
-
-
-        } catch (Exception e) {
-            throw new DatabaseException(e);
-        }
-
-    }
 
     //Returns true if a chat group exists
     public boolean chatGroupExists(String group) throws DatabaseException {
@@ -312,5 +215,5 @@ public class Database {
             throw new DatabaseException(e);
         }
 
-    }
+    }*/
 }

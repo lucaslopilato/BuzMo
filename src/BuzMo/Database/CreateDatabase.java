@@ -95,6 +95,7 @@ class CreateDatabase {
                 "FOREIGN KEY(message_id) REFERENCES Messages(message_id)," +
                 "FOREIGN KEY(recipient) REFERENCES Users(email_address)," +
                 "PRIMARY KEY(message_id, recipient))";
+        //May need read receipt here
 
         writeTable("MessageReceivers", MessageReceivers);
 

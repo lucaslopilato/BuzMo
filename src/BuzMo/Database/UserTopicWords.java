@@ -39,6 +39,10 @@ public class UserTopicWords extends DatabaseObject {
 
     //Insert New Topic Words
     public Insert insert(String userID, Vector<String> words) throws DatabaseException {
+        if(words == null){
+            return Insert.SUCCESS;
+        }
+
         if(!User.exists(st, userID)){
             return Insert.NOEXIST_USR;
         }

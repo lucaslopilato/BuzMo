@@ -5,6 +5,7 @@ import BuzMo.Logger.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 
 /**
@@ -18,7 +19,7 @@ public class MessageTopicWords extends DatabaseObject{
     }
 
     //Get All Topic Words for User
-    public Vector<String> getWords(int messageID) throws DatabaseException {
+    public static Vector<String> getWords(Logger log, Statement st, int messageID) throws DatabaseException {
         Vector<String> response = new Vector<>();
         String sql = "SELECT word FROM messagetopicwords WHERE message_id="+messageID;
         try {
@@ -38,12 +39,16 @@ public class MessageTopicWords extends DatabaseObject{
     }
 
     //Insert New Topic Words
-    public Insert insert(int messageID, Vector<String> words) throws DatabaseException {
+    public static Insert insert(Logger log, Statement st, int messageID, Vector<String> words) throws DatabaseException {
+        if(words == null){
+            return Insert.SUCCESS;
+        }
+
         if(!Message.exists(st, messageID)){
             return Insert.NOEXIST_MSG;
         }
 
-        Vector<String> associated = getWords(messageID);
+        Vector<String> associated = getWords(log, st, messageID);
 
         String sql;
         for(String word : words){

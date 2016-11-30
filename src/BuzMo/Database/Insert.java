@@ -7,6 +7,8 @@ package BuzMo.Database;
 public enum Insert {
     DUPLICATE ("Object Already Exists"),
     NOEXIST_USR ("User Doesn't exist"),
+    NOEXIST_MSG ("Message Doesn't exist"),
+    NOEXIST_GROUP("Group Doesn't exist"),
     SUCCESS ("Successfully Entered"),
     EMPTY_TOPIC_WORDS("Empty Topic Words when Message Public"),
     INVALID ("Invalid Arguments");
