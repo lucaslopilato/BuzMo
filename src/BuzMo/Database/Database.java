@@ -41,26 +41,29 @@ public class Database {
         //Hook up the log to the JDBC Class
         this.log = log;
 
+        //Read in appropriate username and password
+        String username;
+        String password;
+
+        try {
+            //Read in Properties
+            properties = new AppProperties(log, CSIL);
+            username = properties.getUsername();
+            password = properties.getPassword();
+        }catch(PropertiesException e){
+            throw new DatabaseException(e);
+        }
+
         if(!CSIL) {
             //MySQL driver usage since SQLPlus sucks
             this.Msource = new MysqlDataSource();
 
-            //Establish the connection to the database
-            try {
-                //Read in Properties
-                properties = new AppProperties(log, CSIL);
-                String username = properties.getUsername();
-                String password = properties.getPassword();
-
-                Msource.setUser(username);
-                Msource.setPassword(password);
-            } catch (PropertiesException pe) {
-                throw new DatabaseException(pe);
-            }
-
             //Establish MySQL connection
             try {
                 Msource.setURL("jdbc:mysql://localhost/buzmo");
+                Msource.setUser(username);
+                Msource.setPassword(password);
+
                 this.connection = Msource.getConnection();
             } catch (SQLException sql) {
                 throw new DatabaseException("Error establishing SQL connection", sql);
@@ -72,8 +75,6 @@ public class Database {
             try {
                 Class.forName("oracle.jdbc.driver.OracleDriver");
                 String url = "jdbc:oracle:thin:@uml.cs.ucsb.edu:1521:xe";
-                String username = properties.getUsername();
-                String password = properties.getPassword();
                 this.connection = DriverManager.getConnection(url, username, password);
             }
             catch(Exception e){
@@ -81,6 +82,7 @@ public class Database {
                 throw new DatabaseException(e);
             }
 
+            log.Log("Successfully loaded Oracle Database");
         }
 
 
