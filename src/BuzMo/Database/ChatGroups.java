@@ -2,10 +2,12 @@ package BuzMo.Database;
 
 import BuzMo.Logger.Logger;
 
+import java.lang.reflect.Member;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 /**
  * Created by lucas on 11/29/2016.
@@ -20,7 +22,7 @@ public class ChatGroups extends DatabaseObject{
         String sql;
 
         try {
-            sql = "SELECT COUNT(1) FROM chatgroups WHERE name = " + addTicks(name);
+            sql = "SELECT COUNT(1) FROM chatgroups WHERE group_name = " + addTicks(name);
             st.execute(sql);
 
             ResultSet res = st.getResultSet();
@@ -32,27 +34,55 @@ public class ChatGroups extends DatabaseObject{
         }
     }
 
+    public Insert insertGroupAndUsers(String owner, String name, int duration, Vector<String> members) throws DatabaseException{
+        Insert result = insertGroup(owner, name, duration);
+        if(result !=Insert.SUCCESS) {
+            log.Log("Failed to insert new group" + result.toString());
+            return result;
+        }
+
+        ChatGroupMembers mem = new ChatGroupMembers(log, connection);
+        return mem.insertMembers(name, members);
+    }
 
     //Insert Group into the table
     public Insert insertGroup(String owner, String name, int duration) throws DatabaseException{
+        Vector<String> own = new Vector<>();
+        own.add(owner);
+
         //Check if the owner is a valid name
         if(!User.exists(st, owner)){
+            log.Log("Chatgroup "+name+" has no valid owner");
             return Insert.NOEXIST_USR;
         }
 
-        if(!ChatGroups.exists(st, name)){
+        if(ChatGroups.exists(st, name)){
+            log.Log("Chatgroup "+name+" already exists");
             return Insert.DUPLICATE;
         }
 
-        String sql = "INSERT INTO chatgroups (owner, name, duration) VALUES (" +
+        String sql = "INSERT INTO chatgroups (owner, group_name, duration) VALUES (" +
                 addTicks(owner) + "," + addTicks(name) + "," + duration + ")";
 
         try {
             st.execute(sql);
+            log.Log("sql executed "+ sql);
+
+            //Insert the owner of the chatgroup to the members if the owner is not already there
+            if(!ChatGroupMembers.members(log,st,name).contains(owner)) {
+
+                ChatGroupMembers m = new ChatGroupMembers(log, connection);
+                Insert result = m.insertMembers(name, own);
+                if (result != Insert.SUCCESS) {
+                    log.Log("Inserting owner of group " + name + " resulted in error " + result.toString());
+                    return result;
+                }
+            }
+
         } catch (SQLException e) {
+            log.Log("invalid sql: "+sql);
             throw new DatabaseException(e);
         }
-
 
         return Insert.SUCCESS;
     }

@@ -18,10 +18,30 @@ import java.util.Vector;
 class CreateDatabase {
     private Logger log;
     private Connection connection;
+    private CSVLoader csv;
+    private Message message;
+    private MessageReceivers messageReceivers;
+    private MessageTopicWords messageTopicWords;
+    private UserTopicWords userTopicWords;
+    private CircleOfFriends circleOfFriends;
+    private ChatGroups chatGroups;
+    private ChatGroupMembers chatGroupMembers;
 
      CreateDatabase(Logger log, Connection connection) throws DatabaseException{
         this.log = log;
         this.connection = connection;
+        this.csv = new CSVLoader(log);
+
+        //Initialize CRUD Classes
+         this.message = new Message(log, connection);
+         this.messageReceivers = new MessageReceivers(log,connection);
+         this.messageTopicWords = new MessageTopicWords(log, connection);
+         this.userTopicWords = new UserTopicWords(log, connection);
+         this.circleOfFriends = new CircleOfFriends(log, connection);
+         this.chatGroups = new ChatGroups(log, connection);
+         this.chatGroupMembers = new ChatGroupMembers(log, connection);
+
+
 
          //Drop all tables before adding
          dropAllTables();
@@ -177,10 +197,14 @@ class CreateDatabase {
     private void inputInfo() throws DatabaseException
     {
         InsertUsers();
-        //InsertFriends();
-        //InsertIndividualFriends();
+        InsertFriends();
+        InsertIndividualFriends();
 
         //InsertMessages();
+        InsertDirectMessages();
+
+        //Insert Groups
+        InsertGroups();
     }
 
     //Input Users into Users table
@@ -201,7 +225,7 @@ class CreateDatabase {
 
             while ((data = csv.getNextLine()) != null) {
                 //Format Base SQL for table insert
-                User u = new User(log,connection,data[0], data[1], data[2], data[3]);
+                User u = new User(log,connection,data[0], data[1], data[2], data[3], data[4]);
                 User.insert(st, u, false);
             }
 
@@ -213,11 +237,11 @@ class CreateDatabase {
     }
 
     private void InsertFriends() throws DatabaseException{
-        CSVLoader csv = new CSVLoader(log);
         csv.loadCSV("circleOfFriends.csv");
 
         String[] data;
         try {
+            CircleOfFriends circle = new CircleOfFriends(log, connection);
             //Operate on each line individually
             while ((data = csv.getNextLine()) != null) {
 
@@ -225,18 +249,9 @@ class CreateDatabase {
                 for (int i = 0; i < data.length; i++) {
                     //Insert the User
                     for (int j = i+1; j < data.length; j++) {
-                        if (j != i) {
-                            String sql = "INSERT INTO circleoffriends ( user, friend ) VALUES (";
-                            sql += ("'" + data[i] + "'");
-                            sql += ",";
-                            sql += ("'" + data[j] + "')");
-
-                            Statement st = connection.createStatement();
-                            st.execute(sql);
-                        }
+                        circle.addFriends(data[i], data[j]);
                     }
                 }
-
             }
         } catch(Exception e){
             throw new DatabaseException(e);
@@ -245,48 +260,40 @@ class CreateDatabase {
     }
 
     private void InsertIndividualFriends() throws DatabaseException{
-        CSVLoader csv = new CSVLoader(log);
         csv.loadCSV("ifriends.csv");
         String[] line;
 
-        try {
-            while ((line = csv.getNextLine()) != null) {
-                String sql = "INSERT INTO circleoffriends ( user, friend ) VALUES (";
-                sql += ("'" + line[0] + "','" + line[1] + "')");
-
-                Statement st = connection.createStatement();
-                st.execute(sql);
-                log.Log("successfully executed individual friend q: "+sql);
-            }
-        } catch(SQLException s){
-            throw new DatabaseException(s);
+        while ((line = csv.getNextLine()) != null) {
+            circleOfFriends.addFriends(line[0], line[1]);
         }
     }
 
-    /*private void InsertMessages() throws DatabaseException{
-        CSVLoader csv = new CSVLoader(log);
+    private void InsertDirectMessages() throws DatabaseException{
         csv.loadCSV("privateMessages.csv");
         String[] line;
 
-        String sql = "";
-        try {
-            while ((line = csv.getNextLine()) != null) {
-                sql = "INSERT INTO messages ( message_id, sender, message, timestamp, is_public ) VALUES (";
-                sql += line[0] + ",";
-                for(int i=1; i<line.length; i++){
-                    sql += ("'" + line[i].replace('|',',') + "',");
-                }
-                sql += "0)";
-
-                Statement st = connection.createStatement();
-                st.execute(sql);
-                log.Log("successfully executed individual friend q: "+sql);
-            }
-        } catch(SQLException s){
-            log.Log("sql error trying to write message "+sql);
-            throw new DatabaseException(s);
+        while ((line = csv.getNextLine()) != null) {
+            line[4] = line[4].replace('|',',');
+            Vector<String> recipients = new Vector<>();
+            recipients.add(line[2]);
+            message.insertPrivateMsg(new Integer(line[0]),line[1],line[3],line[4], recipients).toString();
         }
-    }*/
+    }
+
+    private void InsertGroups() throws DatabaseException{
+        csv.loadCSV("groups.csv");
+        String[] line;
+
+        while ((line = csv.getNextLine()) != null) {
+            Vector<String> members = new Vector<>();
+            for(int i=2; i<line.length; i++){
+                members.add(line[i]);
+            }
+            chatGroups.insertGroupAndUsers(line[1],line[0],2,members);
+        }
+    }
+
+
 
 
 

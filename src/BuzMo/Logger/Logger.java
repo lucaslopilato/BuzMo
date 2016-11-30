@@ -28,11 +28,11 @@ public class Logger{
 
 
             //Set up Log
-            log = new FileHandler("Resources/"+currentDay+".log", true);
+            log = new FileHandler("Resources/"+currentDay+".log", false);
             log.setFormatter(format);
 
             //Set up Debug
-            debug = new FileHandler("Resources/"+currentDay+".debug", true);
+            debug = new FileHandler("Resources/"+currentDay+".debug", false);
             //might need to create new formatter for debug to nicely dump SQL
             log.setFormatter(format);
         }

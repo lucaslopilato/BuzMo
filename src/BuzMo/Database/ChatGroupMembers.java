@@ -46,16 +46,19 @@ public class ChatGroupMembers extends DatabaseObject {
 
     //Attempt to insert members for a chat group
     public Insert insertMembers(String groupName, Vector<String> members) throws DatabaseException{
-        String sql = "INSERT INTO chatgroupmembers (group_name, member) VALUES (";
 
         if(!ChatGroups.exists(st, groupName)){
+
             return Insert.NOEXIST_GROUP;
         }
 
         //Check if the message exists
         //Associate each user with a groupName
         for(String s: members){
+            String sql = "INSERT INTO chatgroupmembers (group_name, member) VALUES (";
+
             if(!User.exists(st, s)){
+                log.Log("cannot add group member "+s+" to group "+groupName+": user doesn't exist");
                 return Insert.NOEXIST_USR;
             }
 
@@ -63,7 +66,9 @@ public class ChatGroupMembers extends DatabaseObject {
 
             try {
                 st.execute(sql);
+                log.Log("successfully wrote sql: "+sql);
             } catch (SQLException e) {
+                log.Log("sql error "+e.getMessage());
                 throw new DatabaseException(e);
             }
         }

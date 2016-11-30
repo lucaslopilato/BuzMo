@@ -12,11 +12,13 @@ import java.sql.Statement;
 public class DatabaseObject {
     //Connection to the database via the driver
     Logger log;
+    Connection connection;
     Statement st;
 
     //Initializes a new DatabaseObject
     public DatabaseObject(Logger log, Connection connection) throws DatabaseException{
         this.log = log;
+        this.connection = connection;
 
         //Check if connection is valid
         if(connection == null){
