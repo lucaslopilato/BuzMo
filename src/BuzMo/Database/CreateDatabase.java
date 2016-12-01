@@ -56,17 +56,17 @@ class CreateDatabase {
                 "email_address VARCHAR(20)," +
                 "password VARCHAR(10)," +
                 "screenname VARCHAR(20)," +
-                "isManager BOOLEAN NOT NULL DEFAULT 0," +
+                "isManager NUMBER(1) DEFAULT 0," +
                 "PRIMARY KEY(email_address))";
 
         writeTable("Users", users);
 
         String CircleOfFriends = "CREATE TABLE CircleOfFriends(" +
-                "user VARCHAR(20)," +
+                "user_id VARCHAR(20)," +
                 "friend VARCHAR(20)," +
-                "FOREIGN KEY(user) REFERENCES Users(email_address)," +
+                "FOREIGN KEY(user_id) REFERENCES Users(email_address)," +
                 "FOREIGN KEY(friend) REFERENCES users(email_address)," +
-                "PRIMARY KEY (user,friend))";
+                "PRIMARY KEY (user_id,friend))";
         //Check user != friend
         //Check user, friend != friend user
 
@@ -74,10 +74,10 @@ class CreateDatabase {
 
 
         String UserTopicWords = "CREATE TABLE UserTopicWords(" +
-                "user VARCHAR(20)," +
+                "user_id VARCHAR(20)," +
                 "word VARCHAR(20)," +
-                "FOREIGN KEY(user) REFERENCES Users(email_address)," +
-                "PRIMARY KEY (user,word))";
+                "FOREIGN KEY(user_id) REFERENCES Users(email_address)," +
+                "PRIMARY KEY (user_id,word))";
 
         writeTable("UserTopicWords", UserTopicWords);
 
@@ -87,7 +87,7 @@ class CreateDatabase {
                 "sender VARCHAR(20)," +
                 "message VARCHAR(1400)," +
                 "timestamp VARCHAR(30)," +
-                "is_public BOOLEAN," +
+                "is_public NUMBER(1) DEFAULT 0," +
                 "PRIMARY KEY(message_id))";
                 //Check if message is public, topic words cannot be null
 

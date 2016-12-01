@@ -20,7 +20,7 @@ public class UserTopicWords extends DatabaseObject {
     //Get All Topic Words for User
     public Vector<String> getWords(String userID) throws DatabaseException {
         Vector<String> response = new Vector<>();
-        String sql = "SELECT word FROM usertopicwords WHERE user="+addTicks(userID);
+        String sql = "SELECT word FROM usertopicwords WHERE user_id="+addTicks(userID);
         try {
             st.execute(sql);
 
@@ -56,7 +56,7 @@ public class UserTopicWords extends DatabaseObject {
                 return Insert.DUPLICATE;
             }
 
-            sql = "INSERT INTO usertopicwords(user,word) VALUES (" +
+            sql = "INSERT INTO usertopicwords(user_id,word) VALUES (" +
                     addTicks(userID)+","+addTicks(word)+")";
 
             try {

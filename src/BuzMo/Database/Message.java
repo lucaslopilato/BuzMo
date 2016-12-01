@@ -104,7 +104,7 @@ public class Message extends DatabaseObject{
                 return Insert.DUPLICATE;
             }
 
-            String pub = isPublic ? "TRUE" : "FALSE";
+            int pub = isPublic ? 1 : 0;
 
             //Screen for any 's to be inserted
             message = message.replaceAll("'", "\'\'");

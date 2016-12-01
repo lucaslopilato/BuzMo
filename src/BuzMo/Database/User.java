@@ -115,7 +115,7 @@ public class User extends DatabaseObject{
                 //Insert screenname on selector
                 sql += (user.screenname == null) ? "NULL" : addTicks(user.screenname);
                 sql += ",";
-                sql += (isManager) ? "TRUE" : "FALSE";
+                sql += (isManager) ? 1 : 0;
                 sql += ")";
 
         try {

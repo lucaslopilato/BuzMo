@@ -26,14 +26,14 @@ public class CircleOfFriends extends DatabaseObject {
         if(!User.exists(st,userID)){
             throw new DatabaseException("Cannot find circle of Friends for non existent user: "+userID);
         }
-        String sql = "SELECT * FROM circleOfFriends C WHERE C.user="+addTicks(userID)+" OR C.friend="+addTicks(userID);
+        String sql = "SELECT * FROM circleOfFriends C WHERE C.user_id="+addTicks(userID)+" OR C.friend="+addTicks(userID);
         try {
             st.execute(sql);
             log.gSQL(sql);
             ResultSet rs = st.getResultSet();
 
             while(rs.next()){
-                String first = rs.getString("user");
+                String first = rs.getString("user_id");
                 if(first.compareTo(userID) != 0){
                     response.add(first);
                 }
@@ -69,7 +69,7 @@ public class CircleOfFriends extends DatabaseObject {
             //throw new DatabaseException("Cannot add friendship, "+user2+" doesn't exist");
         }
 
-        String sql = "INSERT INTO circleoffriends (user,friend) VALUES (" +addTicks(user1)+","+addTicks(user2)+")";
+        String sql = "INSERT INTO circleoffriends (user_id,friend) VALUES (" +addTicks(user1)+","+addTicks(user2)+")";
         try {
             st.execute(sql);
             log.gSQL(sql);
