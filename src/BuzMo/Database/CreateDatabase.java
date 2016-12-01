@@ -223,7 +223,6 @@ class CreateDatabase {
         String[] data;
 
         try {
-            Statement st = connection.createStatement();
 
             while ((data = csv.getNextLine()) != null) {
                 //Format Base SQL for table insert
@@ -231,7 +230,6 @@ class CreateDatabase {
                 User.insert(connection, u, false);
             }
 
-            st.close();
         }
         catch(Exception e){
             throw new DatabaseException(e);
