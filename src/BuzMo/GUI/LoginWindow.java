@@ -73,6 +73,7 @@ public class LoginWindow extends JFrame {
                     String usernameInput = usernameField.getText();
                     String passwordInput = new String(passwordField.getPassword());
 
+                    log.Log("Event occurred");
                     try{
                         Boolean exists = User.exists(connection,usernameInput);
 
