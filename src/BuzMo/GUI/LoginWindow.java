@@ -68,14 +68,15 @@ public class LoginWindow extends JFrame {
     }
 
     private void handleLoginAction() {
-        loginButton.addActionListener(
-                (ActionEvent e) -> {
-                    String usernameInput = usernameField.getText();
-                    String passwordInput = new String(passwordField.getPassword());
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usernameInput = usernameField.getText();
+                String passwordInput = new String(passwordField.getPassword());
 
-                    log.Log("Event occurred");
-                    try{
-                        Boolean exists = User.exists(connection,usernameInput);
+                log.Log("Event occurred");
+                try{
+                    Boolean exists = User.exists(connection,usernameInput);
 
 
                     //Check if user exists
@@ -87,30 +88,30 @@ public class LoginWindow extends JFrame {
                     }
 
 
-                        // ADD SQL QUERY to look up email and password in Users table.
-                        // If login successful, bring up a new Main Menu and dispose of the current window
-                        String pass = User.getPassword(log, connection,usernameInput);
+                    // ADD SQL QUERY to look up email and password in Users table.
+                    // If login successful, bring up a new Main Menu and dispose of the current window
+                    String pass = User.getPassword(log, connection,usernameInput);
 
-                        if (passwordInput.equals(pass)) {
-                            new MainMenu(log, usernameInput);
-                            loginWindow.dispose();
-                            dispose();
-                        }
-                        // If username or password are incorrect, ask for it again
-                        else {
-                            JOptionPane.showMessageDialog(null, "Invalid Password / Username");
-                            usernameField.setText("");
-                            passwordField.setText("");
-                            usernameField.requestFocus();
-                        }
-                    }catch(Exception except){
-                        log.Log("Error occurred in login window "+except.getMessage());
+                    if (passwordInput.equals(pass)) {
+                        new MainMenu(log, usernameInput);
+                        loginWindow.dispose();
+                        dispose();
+                    }
+                    // If username or password are incorrect, ask for it again
+                    else {
                         JOptionPane.showMessageDialog(null, "Invalid Password / Username");
                         usernameField.setText("");
                         passwordField.setText("");
                         usernameField.requestFocus();
                     }
+                }catch(Exception except){
+                    log.Log("Error occurred in login window "+except.getMessage());
+                    JOptionPane.showMessageDialog(null, "Invalid Password / Username");
+                    usernameField.setText("");
+                    passwordField.setText("");
+                    usernameField.requestFocus();
                 }
-        );
+            }
+        });
     }
 }
