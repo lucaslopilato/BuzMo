@@ -122,7 +122,7 @@ public class MainMenu extends JFrame {
         //                      BrowseMessages -> UserSearchResults
         browseMessagesButton.addActionListener(
                 (ActionEvent e) -> {
-
+                    new BrowseMessages(log, yourUsername);
                 }
         );
 
