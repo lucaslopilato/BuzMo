@@ -27,7 +27,9 @@ public class Message extends DatabaseObject{
 
             ResultSet res = st.getResultSet();
             res.getRow();
-            return res.getInt(1) != 0;
+            boolean response = res.getInt(1) != 0;
+            res.close();
+            return response;
 
         } catch (Exception e) {
             log.bSQL(sql);
