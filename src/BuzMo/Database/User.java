@@ -112,10 +112,10 @@ public class User extends DatabaseObject{
             res.close();
             st.close();
 
-
             return true;
 
         } catch (Exception e) {
+            System.out.println("Error in finding number of users");
             throw new DatabaseException(e);
         }
     }
@@ -131,6 +131,7 @@ public class User extends DatabaseObject{
         }
 
         if(user.exists()){
+            user.log.Log("user "+user.email+ " already exists");
             return Insert.DUPLICATE;
             //throw new DatabaseException("User already exists");
         }
