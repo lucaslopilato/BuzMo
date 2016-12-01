@@ -101,13 +101,15 @@ public class User extends DatabaseObject{
             st.execute(sql);
 
             ResultSet res = st.getResultSet();
-            st.close();
 
             if(res == null){
+                st.close();
                 return false;
             }
-            res.next();
+
             res.close();
+            st.close();
+
 
             return true;
 

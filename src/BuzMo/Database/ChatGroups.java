@@ -34,11 +34,15 @@ public class ChatGroups extends DatabaseObject{
             log.gSQL(sql);
 
             ResultSet res = st.getResultSet();
+
+            if(res == null) {
+                st.close();
+                return false;
+            }
+
+            res.close();
             st.close();
 
-            if(res == null)
-                return false;
-            res.close();
 
             return true;
 
