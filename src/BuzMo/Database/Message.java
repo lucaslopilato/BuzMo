@@ -26,10 +26,8 @@ public class Message extends DatabaseObject{
             log.gSQL(sql);
 
             ResultSet res = st.getResultSet();
-            res.getRow();
-            boolean response = res.getInt(1) != 0;
-            res.close();
-            return response;
+            res.next();
+            return res.getInt(1) != 0;
 
         } catch (Exception e) {
             log.bSQL(sql);

@@ -96,9 +96,7 @@ public class User extends DatabaseObject{
             ResultSet res = st.getResultSet();
             res.next();
 
-            boolean response = res.getInt(1) != 0;
-            //res.close();
-            return response;
+            return res.getInt(1) != 0;
 
         } catch (Exception e) {
             throw new DatabaseException(e);
