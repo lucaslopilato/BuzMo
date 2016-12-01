@@ -35,13 +35,11 @@ public class BuzMo {
             log = new Logger();
 
             //Load Database Connector
-            // TEMPORARILY COMMENTED OUT TO DEVELOP GUI
             db = new Database(log);
 
             //Load GUI
-            gui = new GUI(log);
+            gui = new GUI(log, db);
 
-            // TEMPORARILY COMMENTED OUT TO DEVELOP GUI
             db.dispose();
             log.Log("BuzMo Successfully Exited");
             log.Log("===========================");

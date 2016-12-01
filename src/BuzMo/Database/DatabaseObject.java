@@ -3,6 +3,7 @@ package BuzMo.Database;
 import BuzMo.Logger.Logger;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -30,6 +31,16 @@ public class DatabaseObject {
         if(original.charAt(0) == '\'')
             return original;
         return "'"+original+"'";
+    }
+
+    static Statement getSt(Connection c, Logger log){
+        try {
+            return c.createStatement();
+        } catch (SQLException e) {
+            log.Log("Error creating statement: "+e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

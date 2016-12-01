@@ -207,5 +207,32 @@ public class User extends DatabaseObject{
         return Insert.SUCCESS;
     }
 
+    public static String getPassword(Logger log, Connection connection, String email) throws DatabaseException{
+        Statement st = getSt(connection, log);
+
+        String sql = "SELECT password FROM USERS WHERE email_address="+email;
+
+        String response = "";
+
+        try{
+            st.execute(sql);
+            ResultSet rs = st.getResultSet();
+            rs.next();
+            response = rs.getString(1);
+
+            rs.close();
+            st.close();
+
+        } catch (SQLException e) {
+            log.Log("error retrieving user password");
+            throw new DatabaseException(e);
+        }
+        return response;
+
+    }
+
+
+
+
 
 }

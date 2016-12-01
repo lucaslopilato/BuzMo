@@ -85,28 +85,6 @@ public class Database {
             log.Log("Successfully loaded Oracle Database");
         }
 
-
-        //Oracle OJDBC
-        /*try {
-            //Initialize DataSource class
-            this.source = new OracleDataSource();
-
-            //Set Parameters
-            //source.setDatabaseName("XE");
-            //source.setPortNumber(1521);
-            //source.getDriverType("thin")
-            source.setURL(url);
-
-        }
-        catch(SQLException sql){
-            throw new DatabaseException("Error trying to Initialize Oracle Data Source", sql);
-        }*/
-
-
-
-
-
-
         CreateDatabase init = new CreateDatabase(log,connection, this);
 
     }
@@ -125,5 +103,10 @@ public class Database {
         newMsg++;
         return newMsg - 1;
     }
+
+    public Connection getConnection(){
+        return this.connection;
+    }
+
 
 }
