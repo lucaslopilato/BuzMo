@@ -88,7 +88,9 @@ public class LoginWindow extends JFrame {
 
                         // ADD SQL QUERY to look up email and password in Users table.
                         // If login successful, bring up a new Main Menu and dispose of the current window
-                        if (passwordInput.equals(User.getPassword(log, connection, usernameInput))) {
+                        String pass = User.getPassword(log, connection,usernameInput);
+                        if (passwordInput.equals(pass)) {
+                            log.Log("in: "+ passwordInput + " other: "+pass );
                             new MainMenu(log, usernameInput);
                             loginWindow.dispose();
                             dispose();
