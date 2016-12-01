@@ -135,7 +135,7 @@ public class User extends DatabaseObject{
             return Insert.NOEXIST_USR;
         }
 
-        String sql = "UPDATE users SET isManager=TRUE WHERE email_address="+addTicks(email);
+        String sql = "UPDATE users SET isManager=1 WHERE email_address="+addTicks(email);
         try {
             st.execute(sql);
             log.gSQL(sql);
@@ -153,7 +153,7 @@ public class User extends DatabaseObject{
             return Insert.NOEXIST_USR;
         }
 
-        String sql = "UPDATE users SET isManager=FALSE WHERE email_address="+addTicks(email);
+        String sql = "UPDATE users SET isManager=0 WHERE email_address="+addTicks(email);
         try {
             st.execute(sql);
             log.gSQL(sql);
