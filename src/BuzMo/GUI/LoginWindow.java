@@ -26,7 +26,7 @@ public class LoginWindow extends JFrame {
         // Set the login panel parameters
         loginWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         loginWindow.setSize(400, 200);
-        loginWindow.setLocation(500, 280);
+        loginWindow.setLocation(100, 100);
         loginWindow.setResizable(false);
 
         // Create the main panel
