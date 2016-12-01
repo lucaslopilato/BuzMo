@@ -65,14 +65,13 @@ public class LoginWindow extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Logger log = LoginWindow.this.log;
-                Connection connection = LoginWindow.this.connection;
                 String usernameInput = usernameField.getText();
                 String passwordInput = new String(passwordField.getPassword());
 
-                log.Log("Event occurred");
+                System.out.println("attempt to print");
+                LoginWindow.this.log.Log("Event occurred");
                 try{
-                    Boolean exists = User.exists(connection,usernameInput);
+                    Boolean exists = User.exists(LoginWindow.this.connection,usernameInput);
 
 
                     //Check if user exists
@@ -101,7 +100,7 @@ public class LoginWindow extends JFrame {
                         usernameField.requestFocus();
                     }
                 }catch(Exception except){
-                    log.Log("Error occurred in login window "+except.getMessage());
+                    LoginWindow.this.log.Log("Error occurred in login window "+except.getMessage());
                     JOptionPane.showMessageDialog(null, "Invalid Password / Username");
                     usernameField.setText("");
                     passwordField.setText("");
@@ -111,7 +110,7 @@ public class LoginWindow extends JFrame {
         });
 
 
-        log.Log("GUI -- LoginWindow properly loaded");
+        LoginWindow.this.log.Log("GUI -- LoginWindow properly loaded");
     }
 
     private String getPass(String email) throws DatabaseException{
@@ -122,7 +121,7 @@ public class LoginWindow extends JFrame {
             }
 
             else{
-                return User.getPassword(log, connection, email);
+                return User.getPassword(LoginWindow.this.log, LoginWindow.this.connection, email);
             }
         }catch(Exception e){
             System.out.println(e.getMessage());
