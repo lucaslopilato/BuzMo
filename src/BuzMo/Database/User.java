@@ -223,7 +223,10 @@ public class User extends DatabaseObject{
             rs.close();
             st.close();
 
+            log.gSQL(sql);
+
         } catch (SQLException e) {
+            log.bSQL(sql);
             log.Log("error retrieving user password");
             throw new DatabaseException(e);
         }
