@@ -34,12 +34,14 @@ public class Message extends DatabaseObject{
             log.gSQL(sql);
 
             ResultSet res = st.getResultSet();
+            res.next();
+
+            Boolean response = res.getInt(1) != 0;
+
+            res.close();
             st.close();
 
-            if(res == null)
-                return false;
-            res.close();
-            return true;
+            return response;
 
         } catch (Exception e) {
             log.bSQL(sql);

@@ -1,6 +1,7 @@
 package BuzMo.Database;
 
 import BuzMo.Logger.Logger;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import javax.xml.crypto.Data;
 import java.sql.Connection;
@@ -103,16 +104,14 @@ public class User extends DatabaseObject{
             st.execute(sql);
 
             ResultSet res = st.getResultSet();
+            res.next();
 
-            if(res == null){
-                st.close();
-                return false;
-            }
+            Boolean response = res.getInt(1) != 0;
 
             res.close();
             st.close();
 
-            return true;
+            return response;
 
         } catch (Exception e) {
             System.out.println("Error in finding number of users");
