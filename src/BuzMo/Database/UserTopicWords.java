@@ -20,6 +20,7 @@ public class UserTopicWords extends DatabaseObject {
 
     //Get All Topic Words for User
     public Vector<String> getWords(String userID) throws DatabaseException {
+
         Statement st;
         try{
             st = connection.createStatement();
@@ -51,7 +52,6 @@ public class UserTopicWords extends DatabaseObject {
 
     //Insert New Topic Words
     public Insert insert(String userID, Vector<String> words) throws DatabaseException {
-
         Statement st;
         try{
             st = connection.createStatement();
@@ -84,12 +84,18 @@ public class UserTopicWords extends DatabaseObject {
                 st.execute(sql);
                 log.gSQL(sql);
 
-                st.close();
             } catch (SQLException e) {
                 log.bSQL(sql);
                 throw new DatabaseException(e);
             }
         }
+
+        try {
+            st.close();
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+
 
         return Insert.SUCCESS;
     }
