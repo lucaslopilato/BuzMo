@@ -39,11 +39,11 @@ public class MessageReceivers extends DatabaseObject {
             st.execute(sql);
             log.gSQL(sql);
             ResultSet rs = st.getResultSet();
-            st.close();
 
             while(rs.next()){
                 response.add(rs.getString("recipient"));
             }
+            st.close();
 
             log.Log("Recipients retrieved for "+messageID);
             return response;
