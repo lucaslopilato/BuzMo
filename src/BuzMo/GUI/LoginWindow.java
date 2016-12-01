@@ -25,6 +25,7 @@ public class LoginWindow extends JFrame {
     private JTextField usernameField = new JTextField(20);
     private JPasswordField passwordField = new JPasswordField(10);
 
+
     public LoginWindow(Logger log, Connection connection) {
         // Hook up logger to GUI
         this.log = log;
@@ -62,12 +63,6 @@ public class LoginWindow extends JFrame {
         loginWindow.setContentPane(mainPanel);
         loginWindow.setVisible(true);
 
-        handleLoginAction();
-
-        log.Log("GUI -- LoginWindow properly loaded");
-    }
-
-    private void handleLoginAction() {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -113,5 +108,9 @@ public class LoginWindow extends JFrame {
                 }
             }
         });
+
+
+        log.Log("GUI -- LoginWindow properly loaded");
     }
+
 }
