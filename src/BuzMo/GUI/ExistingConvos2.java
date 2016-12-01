@@ -80,7 +80,7 @@ public class ExistingConvos2 extends JPanel implements ListSelectionListener {
 
     public static void createAndShowGUI(Logger log, String yourUsername) {
         JFrame frame = new JFrame("Check out Existing Conversations");
-        frame.setSize(300,400);
+        frame.setSize(240,400);
         frame.setLocation(100,200);
 
         //Create and set up the content pane.

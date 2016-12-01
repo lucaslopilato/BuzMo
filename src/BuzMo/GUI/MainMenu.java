@@ -21,6 +21,7 @@ public class MainMenu extends JFrame {
     private JButton createChatGroupsButton =  new JButton("Create a ChatGroup");
     private JButton browseMessagesButton =  new JButton("Browse messages");
     private JButton managerModeButton =  new JButton("Open manager mode");
+    private JButton managerToggleButton = new JButton("Manager login/logout");
     private JButton debugModeButton =  new JButton("Debug mode");
 
     MainMenu(Logger log, String yourUsername) {
@@ -51,6 +52,7 @@ public class MainMenu extends JFrame {
         gridComponents.add(createChatGroupsButton);
         gridComponents.add(browseMessagesButton);
         gridComponents.add(managerModeButton);
+        gridComponents.add(managerToggleButton);
         gridComponents.add(debugModeButton);
 
         // Add the GridLayout panel to the main frame
@@ -130,6 +132,15 @@ public class MainMenu extends JFrame {
         managerModeButton.addActionListener(
                 (ActionEvent e) -> {
                     new ManagerMenu(log, yourUsername);
+                }
+        );
+
+        //  Enter Manager toggle menu
+        //      STATUS:         INCOMPLETE
+        //      CLASSES USED:   ManagerToggle
+        managerToggleButton.addActionListener(
+                (ActionEvent e) -> {
+                    new ManagerToggle(log, yourUsername);
                 }
         );
 
