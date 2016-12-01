@@ -125,11 +125,8 @@ public class MainMenu extends JFrame {
         );
 
         //  Enter Manager menu
-        //      STATUS:         Incomplete -- Simply implement these
-        //      CLASSES USED:   ManagerMenu -> ActiveUsers
-        //                      ManagerMenu -> TopMessages
-        //                      ManagerMenu -> InactiveUsers
-        //                      ManagerMenu -> Report
+        //      STATUS:         Complete, can implement SQL
+        //      CLASSES USED:   ManagerMenu -> ManagerWindowResult
         managerModeButton.addActionListener(
                 (ActionEvent e) -> {
                     new ManagerMenu(log, yourUsername);

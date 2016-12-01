@@ -19,7 +19,7 @@ public class ManagerMenu {
 
     ManagerMenu(Logger log, String yourUsername) {
         // Get a string array of friends based on SQL query in getFriends();
-        String options[] = {"Top 3 Active Users", "Top 3 Messages", "Number of Inactive Users", "Total Report"};
+        String options[] = {"Top 3 Active Users", "Top 3 Messages", "# of Inactive Users", "Total Report"};
         int numOptions = options.length;
 
         // Hook up logger to GUI
