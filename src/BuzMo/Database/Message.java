@@ -31,12 +31,15 @@ public class Message extends DatabaseObject{
         try {
             sql = "SELECT COUNT(1) FROM messages WHERE message_id= " + messageID;
             st.execute(sql);
-            st.close();
             log.gSQL(sql);
 
             ResultSet res = st.getResultSet();
-            res.next();
-            return res.getInt(1) != 0;
+            st.close();
+
+            if(res == null)
+                return false;
+            res.close();
+            return true;
 
         } catch (Exception e) {
             log.bSQL(sql);

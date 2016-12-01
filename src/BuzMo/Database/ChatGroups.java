@@ -35,8 +35,12 @@ public class ChatGroups extends DatabaseObject{
 
             ResultSet res = st.getResultSet();
             st.close();
-            res.next();
-            return res.getInt(1) != 0;
+
+            if(res == null)
+                return false;
+            res.close();
+
+            return true;
 
         } catch (Exception e) {
             log.bSQL(sql);
