@@ -74,6 +74,8 @@ public class User extends DatabaseObject{
             if(screenname.length() > 20){
                 throw new DatabaseException("Cannot have screenname > 20 chars");
             }
+
+            log.Log("created new User "+email);
     }
 
     //CRUD Functions
@@ -124,7 +126,7 @@ public class User extends DatabaseObject{
         try{
             st = connection.createStatement();
         }catch(Exception e ){
-            user.log.Log("Couldnt create new statement for user insert ");
+            user.log.Log("Couldnt create new statement for user insert.");
             throw new DatabaseException(e);
         }
 
@@ -144,8 +146,10 @@ public class User extends DatabaseObject{
 
         try {
             st.execute(sql);
+            user.log.gSQL(sql);
             st.close();
         } catch (SQLException e) {
+            user.log.Log("sql exception inserting new user "+ e.getMessage());
             throw new DatabaseException(e);
         }
         user.log.Log("successfully executed "+sql);
