@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
  */
 public class NewChatGroup {
     private Logger log;
-    private JFrame newChatGroupWindow = new JFrame("Send a Message");
+    private JFrame newChatGroupWindow = new JFrame("Create a new ChatGroup");
     private JButton sendButton =  new JButton("Send");
     private JTextField groupNameField = new JTextField();
     private JTextField recipientsField = new JTextField();
@@ -22,9 +22,8 @@ public class NewChatGroup {
         this.log = log;
 
         // Set the login panel parameters
-        newChatGroupWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        newChatGroupWindow.setSize(400, 200);
-        newChatGroupWindow.setLocation(500, 280);
+        newChatGroupWindow.setSize(700, 200);
+        newChatGroupWindow.setLocation(100, 200);
         newChatGroupWindow.setResizable(false);
 
         // Create the main panel
@@ -36,12 +35,12 @@ public class NewChatGroup {
         JLabel recipientText = new JLabel("Recipients:");
 
         // Set the field + button parameters
-        groupNameField.setBounds(175, 30, 150, 20);
-        groupNameText.setBounds(75, 30, 150, 20);
-        recipientsField.setBounds(175, 75, 150, 20);
-        recipientText.setBounds(75, 75, 150, 20);
+        groupNameField.setBounds(325, 30, 150, 20);
+        groupNameText.setBounds(225, 30, 150, 20);
+        recipientsField.setBounds(325, 75, 150, 20);
+        recipientText.setBounds(225, 75, 150, 20);
 
-        sendButton.setBounds(160, 120, 80, 20);
+        sendButton.setBounds(310, 120, 80, 20);
 
         // Add the fields + buttons to the login panel
         mainPanel.add(groupNameField);
@@ -68,7 +67,7 @@ public class NewChatGroup {
                     String groupName = groupNameField.getText();
 
                     for (int i=0; i<recipientsList.length; i++) {
-                        System.out.println(recipientsList[i] + " has been added to " + groupName + " by " + yourUsername);
+                        System.out.println(yourUsername + " has added " + recipientsList[i] + " to " + groupName);
                     }
                     newChatGroupWindow.dispose();
                 }

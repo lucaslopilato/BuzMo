@@ -43,7 +43,13 @@ public class CreateNewConvo {
     }
     // ADD SQL QUERY HERE! Just get a list of all your friends
     public String[] getFriends() {
-        String result[] = {"THIS", "IS", "ALL", "YOUR", "FRIENDS"};
+        String result[] = {"Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
+                "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana",
+                "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan",
+                "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+                "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
+                "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah",
+                "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"};
         return result;
     }
     public void handleFriendClick(JButton newButton, String yourUsername, String friendUsername) {
