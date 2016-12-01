@@ -65,6 +65,8 @@ public class LoginWindow extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Logger log = LoginWindow.this.log;
+                Connection connection = LoginWindow.this.connection;
                 String usernameInput = usernameField.getText();
                 String passwordInput = new String(passwordField.getPassword());
 
