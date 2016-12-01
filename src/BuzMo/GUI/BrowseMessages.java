@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 
 /**
  * Created by Ben on 11/30/2016.
+ * Allows you to either search for messages by topic word,
+ * or search for users.
  */
 public class BrowseMessages {
     private Logger log;
@@ -53,18 +55,21 @@ public class BrowseMessages {
         browseMessagesWindow.setContentPane(mainPanel);
         browseMessagesWindow.setVisible(true);
 
-        handleSearchButtonClick(log, yourUsername, messageSearchField.getText());
-        handleSearchButtonClick(log, yourUsername, userSearchField.getText());
+        handleMessageSearchButtonClick(log, yourUsername, messageSearchField.getText());
+        handleUserSearchButtonClick(log, yourUsername, userSearchField.getText());
 
         log.Log("GUI -- BrowseMessages properly loaded");
     }
 
-    private void handleSearchButtonClick(Logger log, String yourUsername, String input) {
+    private void handleMessageSearchButtonClick(Logger log, String yourUsername, String input) {
         messageSearchButton.addActionListener(
                 (ActionEvent e) -> {
-                    new TopicSearchResults(log, yourUsername, input);
+                    TopicSearchResults.createAndShowGUI(log, yourUsername, input);
                 }
         );
+    }
+
+    private void handleUserSearchButtonClick(Logger log, String yourUsername, String input) {
         userSearchButton.addActionListener(
                 (ActionEvent e) -> {
                     new UserSearchResults(log, yourUsername, input);

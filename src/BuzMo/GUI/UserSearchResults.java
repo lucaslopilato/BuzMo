@@ -10,6 +10,5 @@ import java.awt.event.ActionEvent;
  */
 public class UserSearchResults {
     UserSearchResults(Logger log, String yourUsername, String input) {
-        JOptionPane.showMessageDialog(null, "Created UserSearchResults");
     }
 }
