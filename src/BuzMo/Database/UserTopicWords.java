@@ -24,6 +24,7 @@ public class UserTopicWords extends DatabaseObject {
         try{
             st = connection.createStatement();
         }catch(Exception e ){
+            log.Log("Couldn't create new statement to get usertopicwords");
             throw new DatabaseException(e);
         }
 
@@ -34,10 +35,12 @@ public class UserTopicWords extends DatabaseObject {
 
             //Get results
             ResultSet rs = st.getResultSet();
-            st.close();
             while(rs.next()){
                 response.add(rs.getString(1));
             }
+
+            rs.close();
+            st.close();
         } catch (SQLException e) {
             log.Log("Invalid SQL: "+sql);
             throw new DatabaseException(e);
