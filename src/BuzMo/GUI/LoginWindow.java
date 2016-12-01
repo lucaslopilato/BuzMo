@@ -73,15 +73,9 @@ public class LoginWindow extends JFrame {
                     String usernameInput = usernameField.getText();
                     String passwordInput = new String(passwordField.getPassword());
 
-                    Boolean exists = true;
                     try{
-                        exists = User.exists(connection,usernameInput);
-                    } catch (DatabaseException e1) {
-                        JOptionPane.showMessageDialog(null, "Invalid Username");
-                        usernameField.setText("");
-                        passwordField.setText("");
-                        usernameField.requestFocus();
-                    }
+                        Boolean exists = User.exists(connection,usernameInput);
+
 
                     //Check if user exists
                     if(!exists){
@@ -92,7 +86,6 @@ public class LoginWindow extends JFrame {
                     }
 
 
-                    try {
                         // ADD SQL QUERY to look up email and password in Users table.
                         // If login successful, bring up a new Main Menu and dispose of the current window
                         if (usernameInput.equals("test") && passwordInput.equals(User.getPassword(log, connection, usernameInput))) {
@@ -108,6 +101,7 @@ public class LoginWindow extends JFrame {
                             usernameField.requestFocus();
                         }
                     }catch(Exception except){
+                        log.Log("Error occurred in login window "+except.getMessage());
                         JOptionPane.showMessageDialog(null, "Invalid Password / Username");
                         usernameField.setText("");
                         passwordField.setText("");
