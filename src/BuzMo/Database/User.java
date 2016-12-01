@@ -124,6 +124,7 @@ public class User extends DatabaseObject{
         try{
             st = connection.createStatement();
         }catch(Exception e ){
+            user.log.Log("Couldnt create new statement for user insert ");
             throw new DatabaseException(e);
         }
 
