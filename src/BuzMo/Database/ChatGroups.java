@@ -18,8 +18,15 @@ public class ChatGroups extends DatabaseObject{
         super(log, connection);
     }
 
-    public static boolean exists(Logger log, Statement st, String name) throws DatabaseException{
+    public static boolean exists(Logger log, Connection connection, String name) throws DatabaseException{
         String sql = "";
+
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
 
         try {
             sql = "SELECT COUNT(1) FROM chatgroups WHERE group_name = " + addTicks(name);
@@ -27,6 +34,7 @@ public class ChatGroups extends DatabaseObject{
             log.gSQL(sql);
 
             ResultSet res = st.getResultSet();
+            st.close();
             res.next();
             return res.getInt(1) != 0;
 
@@ -52,13 +60,20 @@ public class ChatGroups extends DatabaseObject{
         Vector<String> own = new Vector<>();
         own.add(owner);
 
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         //Check if the owner is a valid name
-        if(!User.exists(st, owner)){
+        if(!User.exists(connection, owner)){
             log.Log("Chatgroup "+name+" has no valid owner");
             return Insert.NOEXIST_USR;
         }
 
-        if(ChatGroups.exists(log, st, name)){
+        if(ChatGroups.exists(log, connection, name)){
             log.Log("Chatgroup "+name+" already exists");
             return Insert.DUPLICATE;
         }
@@ -69,9 +84,10 @@ public class ChatGroups extends DatabaseObject{
         try {
             st.execute(sql);
             log.gSQL(sql);
+            st.close();
 
             //Insert the owner of the chatgroup to the members if the owner is not already there
-            if(!ChatGroupMembers.members(log,st,name).contains(owner)) {
+            if(!ChatGroupMembers.members(log,connection,name).contains(owner)) {
 
                 ChatGroupMembers m = new ChatGroupMembers(log, connection);
                 Insert result = m.insertMembers(name, own);

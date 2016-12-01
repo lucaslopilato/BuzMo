@@ -19,16 +19,24 @@ public class ChatGroupMembers extends DatabaseObject {
     }
 
     //Gets a list of all recipients for a specific message
-    public static Vector<String> members(Logger log, Statement st, String groupName) throws DatabaseException{
+    public static Vector<String> members(Logger log, Connection connection, String groupName) throws DatabaseException{
         Vector<String> response = new Vector<>();
 
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         //Check if the user exists
-        if(!ChatGroups.exists(log, st,groupName)){
+        if(!ChatGroups.exists(log, connection,groupName)){
             throw new DatabaseException("Cannot find recipients for non existent group: "+groupName);
         }
         String sql = "SELECT member FROM chatgroupmembers C WHERE C.group_name="+addTicks(groupName);
         try {
             st.execute(sql);
+            st.close();
             log.gSQL(sql);
             ResultSet rs = st.getResultSet();
 
@@ -48,7 +56,15 @@ public class ChatGroupMembers extends DatabaseObject {
     //Attempt to insert members for a chat group
     public Insert insertMembers(String groupName, Vector<String> members) throws DatabaseException{
 
-        if(!ChatGroups.exists(log, st, groupName)){
+
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
+        if(!ChatGroups.exists(log, connection, groupName)){
 
             return Insert.NOEXIST_GROUP;
         }
@@ -58,7 +74,7 @@ public class ChatGroupMembers extends DatabaseObject {
         for(String s: members){
             String sql = "INSERT INTO chatgroupmembers (group_name, member) VALUES (";
 
-            if(!User.exists(st, s)){
+            if(!User.exists(connection, s)){
                 log.Log("cannot add group member "+s+" to group "+groupName+": user doesn't exist");
                 return Insert.NOEXIST_USR;
             }
@@ -67,6 +83,7 @@ public class ChatGroupMembers extends DatabaseObject {
 
             try {
                 st.execute(sql);
+                st.close();
                 log.gSQL(sql);
             } catch (SQLException e) {
                 log.bSQL(sql);

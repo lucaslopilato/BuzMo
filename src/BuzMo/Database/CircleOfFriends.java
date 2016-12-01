@@ -19,11 +19,17 @@ public class CircleOfFriends extends DatabaseObject {
 
     //Get the circle of Friends for a user
     //Note: Does not contain the user whose circle it is
-    public static Vector<String> getCircleOfFriends(Logger log, Statement st, String userID)throws DatabaseException{
+    public static Vector<String> getCircleOfFriends(Logger log, Connection connection, String userID)throws DatabaseException{
         Vector<String> response = new Vector<>();
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
 
         //Check if the user exists
-        if(!User.exists(st,userID)){
+        if(!User.exists(connection,userID)){
             throw new DatabaseException("Cannot find circle of Friends for non existent user: "+userID);
         }
         String sql = "SELECT * FROM circleOfFriends C WHERE C.user_id="+addTicks(userID)+" OR C.friend="+addTicks(userID);
@@ -43,6 +49,8 @@ public class CircleOfFriends extends DatabaseObject {
             }
 
             log.Log("Circle of Friends Retrieved for user "+userID);
+            st.close();
+
             return response;
         } catch (SQLException e) {
             log.bSQL(sql);
@@ -53,18 +61,25 @@ public class CircleOfFriends extends DatabaseObject {
 
     //Add new Friendship
     public Insert addFriends(String user1, String user2) throws DatabaseException {
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         //Check if both users are the same
         if(user1.compareTo(user2) == 0){
             return Insert.DUPLICATE;
             //throw new DatabaseException("Users are implicitly friends with each other");
         }
 
-        if(!User.exists(st, user1)){
+        if(!User.exists(connection, user1)){
             return Insert.NOEXIST_USR;
             //throw new DatabaseException("Cannot add friendship, "+user1+" doesn't exist");
         }
 
-        if(!User.exists(st, user2)){
+        if(!User.exists(connection, user2)){
             return Insert.NOEXIST_USR;
             //throw new DatabaseException("Cannot add friendship, "+user2+" doesn't exist");
         }
@@ -73,6 +88,7 @@ public class CircleOfFriends extends DatabaseObject {
         try {
             st.execute(sql);
             log.gSQL(sql);
+            st.close();
         } catch (SQLException e) {
             log.bSQL(sql);
             throw new DatabaseException(e);

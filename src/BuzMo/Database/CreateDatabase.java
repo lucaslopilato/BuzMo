@@ -228,7 +228,7 @@ class CreateDatabase {
             while ((data = csv.getNextLine()) != null) {
                 //Format Base SQL for table insert
                 User u = new User(log,connection,data[0], data[1], data[2], data[3], data[4]);
-                User.insert(st, u, false);
+                User.insert(connection, u, false);
             }
 
             st.close();
@@ -366,7 +366,7 @@ class CreateDatabase {
 
         try {
             while ((line = csv.getNextLine()) != null) {
-                User.makeManager(log, connection.createStatement(),line[0]);
+                User.makeManager(log, connection,line[0]);
             }
         }catch(Exception e){
             throw new DatabaseException(e);

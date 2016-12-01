@@ -79,15 +79,22 @@ public class User extends DatabaseObject{
     //CRUD Functions
 
     public boolean exists() throws DatabaseException{
-        return exists(this.st, this.email);
+        return exists(this.connection, this.email);
     }
 
     public static boolean exists(User user) throws DatabaseException{
-        return exists(user.st, user.email);
+        return exists(user.connection, user.email);
     }
 
     //Check if user already exists
-    public static boolean exists(Statement st, String email) throws DatabaseException{
+    public static boolean exists(Connection connection, String email) throws DatabaseException{
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         String sql;
         try {
             sql = "SELECT COUNT(1) FROM Users WHERE email_address = " + addTicks(email);
@@ -96,6 +103,7 @@ public class User extends DatabaseObject{
             ResultSet res = st.getResultSet();
             res.next();
 
+            st.close();
             return res.getInt(1) != 0;
 
         } catch (Exception e) {
@@ -104,7 +112,14 @@ public class User extends DatabaseObject{
     }
 
     //Insert
-    public static Insert insert(Statement st, User user, Boolean isManager) throws DatabaseException {
+    public static Insert insert(Connection connection, User user, Boolean isManager) throws DatabaseException {
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         if(user.exists()){
             return Insert.DUPLICATE;
             //throw new DatabaseException("User already exists");
@@ -121,6 +136,7 @@ public class User extends DatabaseObject{
 
         try {
             st.execute(sql);
+            st.close();
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
@@ -130,8 +146,15 @@ public class User extends DatabaseObject{
     }
 
     //makeManager
-    public static Insert makeManager(Logger log, Statement st, String email) throws DatabaseException{
-        if(!User.exists(st, email)){
+    public static Insert makeManager(Logger log, Connection connection, String email) throws DatabaseException{
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
+        if(!User.exists(connection, email)){
             return Insert.NOEXIST_USR;
         }
 
@@ -139,6 +162,7 @@ public class User extends DatabaseObject{
         try {
             st.execute(sql);
             log.gSQL(sql);
+            st.close();
         } catch (SQLException e) {
             log.bSQL(sql);
             throw new DatabaseException(e);
@@ -148,15 +172,23 @@ public class User extends DatabaseObject{
     }
 
     //makeManager
-    public static Insert makeUser(Logger log, Statement st, String email) throws DatabaseException{
-        if(!User.exists(st, email)){
+    public static Insert makeUser(Logger log, Connection connection, String email) throws DatabaseException{
+        if(!User.exists(connection, email)){
             return Insert.NOEXIST_USR;
+        }
+
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
         }
 
         String sql = "UPDATE users SET isManager=0 WHERE email_address="+addTicks(email);
         try {
             st.execute(sql);
             log.gSQL(sql);
+            st.close();
         } catch (SQLException e) {
             log.bSQL(sql);
             throw new DatabaseException(e);

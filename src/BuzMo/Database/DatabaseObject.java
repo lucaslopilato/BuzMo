@@ -13,7 +13,6 @@ public class DatabaseObject {
     //Connection to the database via the driver
     Logger log;
     Connection connection;
-    Statement st;
 
     //Initializes a new DatabaseObject
     public DatabaseObject(Logger log, Connection connection) throws DatabaseException{
@@ -23,13 +22,6 @@ public class DatabaseObject {
         //Check if connection is valid
         if(connection == null){
             throw new DatabaseException("Cannot initialize a new DatabaseObject with a null connection");
-        }
-
-        //Initialize sql statment
-        try{
-            this.st = connection.createStatement();
-        }catch(Exception e){
-            throw new DatabaseException("Error initializing SQL Statement for new DatabaseObject");
         }
     }
 

@@ -19,15 +19,24 @@ public class MessageTopicWords extends DatabaseObject{
     }
 
     //Get All Topic Words for User
-    public static Vector<String> getWords(Logger log, Statement st, int messageID) throws DatabaseException {
+    public static Vector<String> getWords(Logger log, Connection connection, int messageID) throws DatabaseException {
         Vector<String> response = new Vector<>();
         String sql = "SELECT word FROM messagetopicwords WHERE message_id="+messageID;
+
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         try {
             st.execute(sql);
             log.gSQL(sql);
 
             //Get results
             ResultSet rs = st.getResultSet();
+            st.close();
             while(rs.next()){
                 response.add(rs.getString(1));
             }
@@ -40,18 +49,25 @@ public class MessageTopicWords extends DatabaseObject{
     }
 
     //Insert New Topic Words
-    public static Insert insert(Logger log, Statement st, int messageID, Vector<String> words) throws DatabaseException {
+    public static Insert insert(Logger log, Connection connection, int messageID, Vector<String> words) throws DatabaseException {
         if(words == null){
             log.Log("no topic words added for message "+messageID);
             return Insert.SUCCESS;
         }
 
-        if(!Message.exists(log, st, messageID)){
+        if(!Message.exists(log, connection, messageID)){
             log.Log("cannot add topic words, message "+messageID+" doesn't exist");
             return Insert.NOEXIST_MSG;
         }
 
-        Vector<String> associated = getWords(log, st, messageID);
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
+        Vector<String> associated = getWords(log, connection, messageID);
 
         String sql;
         for(String word : words){
@@ -66,6 +82,7 @@ public class MessageTopicWords extends DatabaseObject{
             try {
                 st.execute(sql);
                 log.gSQL(sql);
+                st.close();
             } catch (SQLException e) {
                 log.bSQL(sql);
                 throw new DatabaseException(e);

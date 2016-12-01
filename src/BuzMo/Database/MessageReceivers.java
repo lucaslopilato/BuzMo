@@ -23,8 +23,15 @@ public class MessageReceivers extends DatabaseObject {
     public Vector<String> recipients(int messageID) throws DatabaseException{
         Vector<String> response = new Vector<>();
 
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         //Check if the user exists
-        if(!Message.exists(log, st,messageID)){
+        if(!Message.exists(log, connection,messageID)){
             throw new DatabaseException("Cannot find recipients for non existent message: "+messageID);
         }
         String sql = "SELECT recipient FROM messagereceivers C WHERE C.message_id="+messageID;
@@ -32,6 +39,7 @@ public class MessageReceivers extends DatabaseObject {
             st.execute(sql);
             log.gSQL(sql);
             ResultSet rs = st.getResultSet();
+            st.close();
 
             while(rs.next()){
                 response.add(rs.getString("recipient"));
@@ -48,13 +56,19 @@ public class MessageReceivers extends DatabaseObject {
 
     //Attempt to insert recipients for a message
     //Function intended as a helper
-    public static Insert insertRecipients(Logger log, Statement st, int messageID, Vector<String> userList) throws DatabaseException{
+    public static Insert insertRecipients(Logger log, Connection connection, int messageID, Vector<String> userList) throws DatabaseException{
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
 
         if(userList == null){
             return Insert.SUCCESS;
         }
 
-        if(!Message.exists(log, st, messageID)){
+        if(!Message.exists(log, connection, messageID)){
             return Insert.NOEXIST_MSG;
         }
 
@@ -63,7 +77,7 @@ public class MessageReceivers extends DatabaseObject {
         for(String s: userList){
             String sql = "INSERT INTO messagereceivers (message_id, recipient) VALUES (";
 
-            if(!User.exists(st, s)){
+            if(!User.exists(connection, s)){
                 return Insert.NOEXIST_USR;
             }
 
@@ -71,6 +85,7 @@ public class MessageReceivers extends DatabaseObject {
 
             try {
                 st.execute(sql);
+                st.close();
                 log.gSQL(sql);
             } catch (SQLException e) {
                 log.bSQL(sql);

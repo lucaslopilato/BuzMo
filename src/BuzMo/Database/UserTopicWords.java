@@ -5,6 +5,7 @@ import BuzMo.Logger.Logger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Vector;
 
 /**
@@ -19,6 +20,13 @@ public class UserTopicWords extends DatabaseObject {
 
     //Get All Topic Words for User
     public Vector<String> getWords(String userID) throws DatabaseException {
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         Vector<String> response = new Vector<>();
         String sql = "SELECT word FROM usertopicwords WHERE user_id="+addTicks(userID);
         try {
@@ -26,6 +34,7 @@ public class UserTopicWords extends DatabaseObject {
 
             //Get results
             ResultSet rs = st.getResultSet();
+            st.close();
             while(rs.next()){
                 response.add(rs.getString(1));
             }
@@ -39,11 +48,19 @@ public class UserTopicWords extends DatabaseObject {
 
     //Insert New Topic Words
     public Insert insert(String userID, Vector<String> words) throws DatabaseException {
+
+        Statement st;
+        try{
+            st = connection.createStatement();
+        }catch(Exception e ){
+            throw new DatabaseException(e);
+        }
+
         if(words == null){
             return Insert.SUCCESS;
         }
 
-        if(!User.exists(st, userID)){
+        if(!User.exists(connection, userID)){
             return Insert.NOEXIST_USR;
         }
 
@@ -61,6 +78,7 @@ public class UserTopicWords extends DatabaseObject {
 
             try {
                 st.execute(sql);
+                st.close();
                 log.gSQL(sql);
             } catch (SQLException e) {
                 log.bSQL(sql);
