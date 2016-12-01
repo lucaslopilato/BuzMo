@@ -78,7 +78,7 @@ class CSVLoader {
             //Change special characters and replace 's for SQL
             for(int i=0; i< response.length; i++){
                 response[i] = response[i].replace('|',',');
-                response[i] = response[i].replaceAll("'", "''").trim();
+                response[i] = response[i].replaceAll("'", "\'\'").trim();
             }
 
             return response;
