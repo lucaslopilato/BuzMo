@@ -56,6 +56,7 @@ public class UserTopicWords extends DatabaseObject {
         try{
             st = connection.createStatement();
         }catch(Exception e ){
+            log.Log("failed to create a new statement to insertTopicWords");
             throw new DatabaseException(e);
         }
 
@@ -81,8 +82,9 @@ public class UserTopicWords extends DatabaseObject {
 
             try {
                 st.execute(sql);
-                st.close();
                 log.gSQL(sql);
+
+                st.close();
             } catch (SQLException e) {
                 log.bSQL(sql);
                 throw new DatabaseException(e);

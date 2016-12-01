@@ -1,9 +1,7 @@
 package BuzMo.Database;
 
 import BuzMo.Logger.Logger;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
