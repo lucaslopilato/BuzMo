@@ -90,13 +90,12 @@ public class ChatGroupMembers extends DatabaseObject {
                 log.bSQL(sql);
                 throw new DatabaseException(e);
             }
+        }
 
-            try {
-                st.close();
-            } catch (SQLException e) {
-                throw new DatabaseException(e);
-            }
-
+        try {
+            st.close();
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
         }
 
         return Insert.SUCCESS;
