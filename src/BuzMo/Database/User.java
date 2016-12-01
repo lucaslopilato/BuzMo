@@ -94,7 +94,7 @@ public class User extends DatabaseObject{
             st.execute(sql);
 
             ResultSet res = st.getResultSet();
-            res.first();
+            res.getRow();
             return res.getInt(1) != 0;
 
         } catch (Exception e) {
