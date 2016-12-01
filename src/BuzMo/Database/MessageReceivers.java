@@ -85,12 +85,17 @@ public class MessageReceivers extends DatabaseObject {
 
             try {
                 st.execute(sql);
-                st.close();
                 log.gSQL(sql);
             } catch (SQLException e) {
                 log.bSQL(sql);
                 throw new DatabaseException(e);
             }
+        }
+
+        try{
+            st.close();
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
         }
 
         return Insert.SUCCESS;
