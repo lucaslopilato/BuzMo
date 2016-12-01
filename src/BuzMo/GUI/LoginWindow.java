@@ -18,8 +18,8 @@ import static java.lang.System.exit;
  * http://www.thepcwizard.in/2011/10/create-login-form-using-netbeans-ide.html
  */
 public class LoginWindow extends JFrame {
-    private final Logger log;
-    private final Connection connection;
+    private Logger log;
+    private Connection connection;
     private JFrame loginWindow = new JFrame("Enter 'test' for both fields to login");
     private JButton loginButton =  new JButton("Login");
     private JTextField usernameField = new JTextField(20);
@@ -27,7 +27,6 @@ public class LoginWindow extends JFrame {
 
 
     public LoginWindow(Logger log, Connection connection) {
-        // Hook up logger to GUI
         this.log = log;
         this.connection = connection;
 
@@ -85,7 +84,7 @@ public class LoginWindow extends JFrame {
 
                     // ADD SQL QUERY to look up email and password in Users table.
                     // If login successful, bring up a new Main Menu and dispose of the current window
-                    String pass = User.getPassword(log, connection,usernameInput);
+                    String pass = getPass(usernameInput);
 
                     if (passwordInput.equals(pass)) {
                         new MainMenu(log, usernameInput);
@@ -111,6 +110,22 @@ public class LoginWindow extends JFrame {
 
 
         log.Log("GUI -- LoginWindow properly loaded");
+    }
+
+    private String getPass(String email) throws DatabaseException{
+        try{
+            if(!User.exists(connection,email)){
+                return "";
+            }
+
+            else{
+                return User.getPassword(log, connection, email);
+            }
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return "";
     }
 
 }
