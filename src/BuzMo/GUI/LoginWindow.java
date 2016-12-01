@@ -113,6 +113,7 @@ public class LoginWindow extends JFrame {
     }
 
     private String getPass(String email) throws DatabaseException{
+        System.out.println("here");
         try{
             if(!User.exists(connection,email)){
                 return "";
