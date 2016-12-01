@@ -7,7 +7,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Created by admin on 11/30/16.
+ * Created by Ben on 11/30/16.
+ * This is the popup window after a manager menu option is selected.
  */
 public class ManagerWindowResult extends JFrame {
     private Logger log;

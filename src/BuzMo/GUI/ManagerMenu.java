@@ -30,15 +30,22 @@ public class ManagerMenu {
         ManagerWindow.setLocation(100,200);
 
         // Create and populate the panel
-        JPanel p = new JPanel(new GridLayout(0,2));
-        for (int i = 0; i < numOptions; i++) {
-            JButton temp = new JButton(options[i]);
-            p.add(temp);
-            handleOptionClick(temp, yourUsername, options[i], i);
+        JPanel managerPanel;
+        if (isManager(yourUsername)) {
+            managerPanel = new JPanel(new GridLayout(0, 2));
+            for (int i = 0; i < numOptions; i++) {
+                JButton temp = new JButton(options[i]);
+                managerPanel.add(temp);
+                handleOptionClick(temp, yourUsername, options[i], i);
+            }
+        }
+        else {
+            managerPanel = new JPanel(new GridLayout(1,1));
+            managerPanel.add(new JLabel("                       You aren't logged in as a Manager!"));
         }
 
-        p.setOpaque(true);
-        ManagerWindow.setContentPane(p);
+        managerPanel.setOpaque(true);
+        ManagerWindow.setContentPane(managerPanel);
         ManagerWindow.setVisible(true);
 
         log.Log("GUI -- ManagerMenu properly loaded");
@@ -50,5 +57,11 @@ public class ManagerMenu {
                     new ManagerWindowResult(log, yourUsername, optionName, optionIndex);
                 }
         );
+    }
+
+    // ADD SQL QUERY TO CHECK IF YOU'RE A MANAGER
+    public boolean isManager(String yourUsername) {
+        if(yourUsername.equals("test")) return true;
+        else return false;
     }
 }
